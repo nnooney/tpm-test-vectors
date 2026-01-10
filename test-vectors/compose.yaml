@@ -1,0 +1,7 @@
+services:
+  simulator_tests:
+    build: .
+    volumes:
+      - ../:/tpm/tpm-test-vectors
+      - ../../tpm-rs:/tpm/tpm-rs
+    command: bash -c 'cargo test -p tpm2-test-vectors -- --nocapture --test-threads=1'

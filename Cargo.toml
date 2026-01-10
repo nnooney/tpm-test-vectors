@@ -4,8 +4,12 @@ members = ["test-vectors"]
 
 [workspace.dependencies]
 # Third party dependencies
+anyhow = "1.0.100"
 hex = { version = "0.4.3", features = ["serde"] }
 ron = "0.12.0"
+rstest = "0.26.1"
+serde = { version = "1.0.228", features = ["derive"] }
+tpm2-rs-client = { path = "../tpm-rs/client" }
 
 # Common workspace crates
 tpm2-test-vectors = { path = "test-vectors" }

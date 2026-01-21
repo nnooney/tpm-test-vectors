@@ -1,32 +1,21 @@
 use anyhow::Context;
 use rstest::rstest;
 use std::process::{Child, Command};
-use tpm2_test_vectors::TpmTestVector;
 
-use tpm2_rs_client::connection::{Connection, SimulatorPlatformSignal, TcpConnection};
+use tpm2_rs_client::connection::{SimulatorPlatformSignal, TcpConnection};
+
+mod common;
 
 #[rstest]
-fn test_vector(
+fn simulator(
     #[files("src/vectors/*.ron")]
     #[mode = str]
     input: &str,
 ) -> anyhow::Result<()> {
-    let test_case: TpmTestVector = ron::from_str(input)?;
-
     let _simulator = TpmSimulator::new()?;
     let mut conn = connect_to_simulator()?;
 
-    for command in test_case.test_sequence {
-        let mut resp = vec![0; command.response.len()];
-        conn.transact(&command.input, &mut resp)?;
-        assert_eq!(
-            resp, command.response,
-            "step \"{}\" response mismatch",
-            command.step
-        );
-    }
-
-    Ok(())
+    common::run_test_vector(input, &mut conn)
 }
 
 /// Environment variable used to connect to the TPM simulator over TCP.

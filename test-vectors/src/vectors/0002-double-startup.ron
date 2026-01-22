@@ -1,0 +1,20 @@
+TpmTestVector(
+  name: "Tpm Startup x2",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    (
+      step: "Issue TPM Startup Command First (success)",
+      input: "80010000000c000001440000",
+      response: "80010000000a00000000",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+    (
+      step: "Issue TPM Startup Command Second (failure)",
+      input: "80010000000c000001440000",
+      response: "80010000000a00000010",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+  ]
+)

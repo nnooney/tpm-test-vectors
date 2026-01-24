@@ -2,7 +2,23 @@ use anyhow::Context;
 use rstest::rstest;
 
 use crate::CommandResponsePair;
+use crate::TpmTestVector;
 use crate::check_command_response_pair;
+
+#[rstest]
+fn test_check_command_response_pair_success(
+    #[files("src/vectors/*.ron")]
+    #[mode = str]
+    input: &str,
+) -> anyhow::Result<()> {
+    let test_vector: TpmTestVector = ron::from_str(input)?;
+
+    for command in test_vector.test_sequence {
+        check_command_response_pair(&command)?;
+    }
+
+    Ok(())
+}
 
 #[rstest]
 #[case::input_too_short("src/testdata/01-input-too-short.ron", "input too short")]

@@ -1,0 +1,24 @@
+// The TPM shall successfully unmarshal a TPM_CC and verify that the command is
+// implemented (TPM_RC_COMMAND_CODE).
+TpmTestVector(
+  name: "[Command Header] bad code",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    (
+      step: "Issue command header with invalid code",
+      // Command code = 01234567, nonsensical
+      input: "80010000000a01234567",
+      response: "80010000000a00000143",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+    (
+      step: "Issue command header with zero code",
+      // Command code = 0
+      input: "80010000000a00000000",
+      response: "80010000000a00000143",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+  ]
+)

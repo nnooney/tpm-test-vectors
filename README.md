@@ -12,10 +12,38 @@ The `test-vectors` crate also contains code to issue the test vectors against a
 TPM implementation, using the `tpm2-client` crate from the
 [`tpm-rs`](https://github.com/tpm-rs/tpm-rs) project.
 
-### Test Vector Expectations
+## Test Vector Details
+
+### TPM Specification
+
+These test vectors are written against v184 of the TPM specification.
+
+### Initial TPM state
 
 Each test vector is designed to be run against a TPM that has just been
-initialized (`_TPM_Init`), but has not yet been started.
+initialized (`_TPM_Init`), but has not yet been started. No expectations are
+made on the non-volatile storage in the TPM.
+
+### Testing Failed Commands
+
+The TPM specification states the following (formatted to fit in block quotes):
+
+> When a command fails to complete for any reason, the TPM shall return
+>
+> - a TPM_ST (UINT16) with a value of TPM_TAG_RSP_COMMAND or TPM_ST_NO_SESSIONS
+>   followed by
+> - a UINT32 (responseSize) with a value of 10, followed by
+> - a UINT32 containing a response code with a value other than TPM_RC_SUCCESS.
+
+> If the tag of the command is not a recognized command tag, the TPM error
+> response will differ depending on TPM 1.2 compatibility. If the TPM supports
+> 1.2 compatibility, the TPM shall return a tag of TPM_TAG_RSP_COMMAND and an
+> appropriate TPM 1.2 response code (TPM_BADTAG = 00 00 00 1E16). If the TPM
+> does not have compatibility with TPM 1.2, the TPM shall return
+> TPM_ST_NO_SESSION and a response code of TPM_RC_TAG.
+
+The test vectors assume that there is no TPM 1.2 compatibility, meaning they
+expect `TPM_ST_NO_SESSIONS` as the tag returned by failed commands.
 
 ## Status
 
@@ -29,7 +57,7 @@ the test vectors.
 
 - [ ] 5 Command Processing
   - [ ] 5.1 Introduction
-  - [ ] 5.2 Command Header Validation
+  - [x] 5.2 Command Header Validation
   - [ ] 5.3 Mode Checks
   - [ ] 5.4 Handle Area Validation
   - [ ] 5.5 Session Area Validation
@@ -283,5 +311,4 @@ simulator and runs the test vectors against it.
 # Run one of these commands from the test-vectors crate root
 docker compose run --rm simulator_tests
 podman compose run --rm simulator_tests
-
 ```

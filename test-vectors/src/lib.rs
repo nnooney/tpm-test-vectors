@@ -46,30 +46,6 @@ pub fn check_command_response_pair(command: &CommandResponsePair) -> anyhow::Res
         ));
     }
 
-    // Ensure encoded length matches the length of the provided value
-    let input_len = u32::from_be_bytes(command.input[2..6].try_into()?);
-    if input_len as usize != command.input.len() {
-        return Err(anyhow::anyhow!(
-            "step \"{}\" encoded input length does not match input length
-want: {}
- got: {}",
-            command.step,
-            input_len,
-            command.input.len(),
-        ));
-    }
-    let response_len = u32::from_be_bytes(command.response[2..6].try_into()?);
-    if response_len as usize != command.response.len() {
-        return Err(anyhow::anyhow!(
-            "step \"{}\" encoded response length does not match response length
-want: {}
- got: {}",
-            command.step,
-            response_len,
-            command.response.len(),
-        ));
-    }
-
     // If a response mask is provided, it should have the same length as the
     // response.
     if !command.response_mask.is_empty() && command.response_mask.len() != command.response.len() {

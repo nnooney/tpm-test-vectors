@@ -1,0 +1,26 @@
+// The TPM shall successfully unmarshal a UINT32 as the commandSize. If the TPM
+// has an interface buffer that is loaded by some hardware process, the number
+// of octets in the input buffer for the command reported by the hardware
+// process shall exactly match the value in commandSize (TPM_RC_COMMAND_SIZE).
+TpmTestVector(
+  name: "[Command Header] bad size",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    (
+      step: "Issue command header with invalid size",
+      // Command size = 01234567, nonsensical
+      input: "80010123456700000000",
+      response: "80010000000a00000142",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+    (
+      step: "Issue command header with valid but incorrect size",
+      // Command size = 0
+      input: "80010000000000000000",
+      response: "80010000000a00000142",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+  ]
+)

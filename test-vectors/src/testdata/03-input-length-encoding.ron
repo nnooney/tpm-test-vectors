@@ -1,6 +1,0 @@
-CommandResponsePair(
-  step: "[test] Input length encoding error",
-  input: "000102030405060708090a0b0c0d0e0f",
-  response: "000102030405060708090a0b0c0d0e0f",
-  response_mask: "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-)

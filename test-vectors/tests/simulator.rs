@@ -1,8 +1,8 @@
 use anyhow::Context;
 use rstest::rstest;
 use std::process::{Child, Command};
-
-use tpm2_rs_client::connection::{SimulatorPlatformSignal, TcpConnection};
+use tpm2_rs_client::connection::{Connection, SimulatorPlatformSignal, TcpConnection};
+use tpm2_test_vectors::{Harness, HarnessError};
 
 mod common;
 
@@ -13,9 +13,9 @@ fn simulator(
     input: &str,
 ) -> anyhow::Result<()> {
     let _simulator = TpmSimulator::new()?;
-    let mut conn = connect_to_simulator()?;
+    let mut harness = TpmSimulatorHarness::new()?;
 
-    common::run_test_vector(input, &mut conn)
+    common::run_test_vector(input, &mut harness)
 }
 
 /// Environment variable used to connect to the TPM simulator over TCP.
@@ -72,6 +72,38 @@ impl Drop for TpmSimulator {
         if let Err(x) = self.0.kill() {
             println!("Failed to stop simulator: {x}");
         }
+    }
+}
+
+/// Structure which implements the [`harness::Harness`] trait for interacting
+/// with the TPM simulator.
+pub struct TpmSimulatorHarness {
+    conn: TcpConnection,
+}
+
+type TcpConnectionError = <TcpConnection as Connection>::Error;
+
+impl TpmSimulatorHarness {
+    pub fn new() -> anyhow::Result<TpmSimulatorHarness> {
+        Ok(TpmSimulatorHarness {
+            conn: connect_to_simulator()?,
+        })
+    }
+}
+
+impl Harness<TcpConnectionError> for TpmSimulatorHarness {
+    fn transact(
+        &mut self,
+        cmd: &[u8],
+        rsp: &mut [u8],
+    ) -> Result<(), HarnessError<TcpConnectionError>> {
+        self.conn.transact(cmd, rsp)?;
+        Ok(())
+    }
+
+    fn set_failure_mode(&mut self) -> Result<(), HarnessError<TcpConnectionError>> {
+        self.conn.test_failure_mode()?;
+        Ok(())
     }
 }
 

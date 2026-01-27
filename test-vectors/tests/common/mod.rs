@@ -1,16 +1,21 @@
-use tpm2_rs_client::connection::Connection;
-use tpm2_test_vectors::check_command_response_pair;
+use std::error::Error;
 
-/// run_test_vector applies the `input` test vector to the TPM using the `conn`
-/// [`Connection`].
-pub fn run_test_vector<T: Connection>(input: &str, conn: &mut T) -> anyhow::Result<()> {
+use tpm2_test_vectors::{Harness, check_command_response_pair};
+
+/// run_test_vector applies the `input` test vector to the TPM using the
+/// `harness` that implements the [`Harness`] trait.
+pub fn run_test_vector<E, H>(input: &str, harness: &mut H) -> anyhow::Result<()>
+where
+    E: Error + Send + Sync + 'static,
+    H: Harness<E>,
+{
     let test_case: tpm2_test_vectors::TpmTestVector = ron::from_str(input)?;
 
     for command in test_case.test_sequence {
         check_command_response_pair(&command)?;
 
         let mut resp = vec![0; command.response.len()];
-        conn.transact(&command.input, &mut resp)?;
+        harness.transact(&command.input, &mut resp)?;
 
         evaluate_command_response_pair(&command, &resp)?;
     }

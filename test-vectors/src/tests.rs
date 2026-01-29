@@ -1,4 +1,6 @@
 use anyhow::Context;
+use core::error::Error;
+use core::fmt::Write;
 use rstest::rstest;
 
 use crate::CommandResponsePair;
@@ -50,14 +52,33 @@ fn test_check_command_response_pair_errors(
             ));
         }
         Err(err) => assert!(
-            err.to_string().contains(expected),
+            format_error(&err)?.contains(expected),
             r#"err does not contain expected substring
         err: {}
   substring: {}"#,
-            err,
+            format_error(&err)?,
             expected
         ),
     }
 
     Ok(())
+}
+
+// Helper function to unroll an error and display it and all its sources, useful
+// for checking certain error messages appear in results.
+//
+// This could be simplified once the following features are stabilized:
+//  - https://doc.rust-lang.org/stable/core/error/trait.Error.html#method.sources
+//  - https://doc.rust-lang.org/std/error/struct.Report.html
+fn format_error<T: Error>(err: T) -> Result<String, anyhow::Error> {
+    let mut s = String::new();
+
+    write!(s, "{err}")?;
+    let mut next_source = err.source();
+    while let Some(source) = next_source {
+        write!(s, ": {source}")?;
+        next_source = source.source();
+    }
+
+    Ok(s)
 }

@@ -1,3 +1,5 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
 // If the TPM is in Failure mode, then the commandCode is TPM_CC_GetTestResult
 // or TPM_CC_GetCapability (TPM_RC_FAILURE) and the command tag is
 // TPM_ST_NO_SESSIONS (TPM_RC_FAILURE).
@@ -6,9 +8,16 @@ TpmTestVector(
   spec_versions: [
     184,
   ],
-  requires: [
+  requirements: [
     FailureMode,
   ],
   test_sequence: [
+    (
+      step: "Issue command not allowed in failure mode",
+      // Command = TPM_Startup
+      input: "80010000000c000001440000",
+      response: "80010000000a00000101",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    )
   ]
 )

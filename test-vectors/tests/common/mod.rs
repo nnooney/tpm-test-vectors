@@ -1,6 +1,8 @@
 use std::error::Error;
 
-use tpm2_test_vectors::{Harness, check_command_response_pair};
+use tpm2_test_vectors::{
+    CommandResponsePair, Harness, TestRequirement, TpmTestVector, check_command_response_pair,
+};
 
 /// run_test_vector applies the `input` test vector to the TPM using the
 /// `harness` that implements the [`Harness`] trait.
@@ -9,7 +11,11 @@ where
     E: Error + Send + Sync + 'static,
     H: Harness<E>,
 {
-    let test_case: tpm2_test_vectors::TpmTestVector = ron::from_str(input)?;
+    let test_case: TpmTestVector = ron::from_str(input)?;
+
+    if let Some(requirements) = test_case.requirements {
+        handle_requirements(&requirements, harness)?;
+    }
 
     for command in test_case.test_sequence {
         check_command_response_pair(&command)?;
@@ -23,10 +29,31 @@ where
     Ok(())
 }
 
+/// handle_requirements modifies the TPM so it is in the correct state required
+/// by the test vector.
+fn handle_requirements<E, H>(
+    requirements: &[TestRequirement],
+    harness: &mut H,
+) -> anyhow::Result<()>
+where
+    E: Error + Send + Sync + 'static,
+    H: Harness<E>,
+{
+    for requirement in requirements {
+        match requirement {
+            TestRequirement::FailureMode => {
+                harness.set_failure_mode()?;
+            }
+        }
+    }
+
+    Ok(())
+}
+
 /// evaluate_command_response_pair compares the `resp` returned from the TPM
 /// against the expectations of the `command`.
 fn evaluate_command_response_pair(
-    command: &tpm2_test_vectors::CommandResponsePair,
+    command: &CommandResponsePair,
     resp: &[u8],
 ) -> anyhow::Result<()> {
     // Require the responses to have the same length.

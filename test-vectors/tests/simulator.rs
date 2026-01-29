@@ -46,10 +46,26 @@ const DEFAULT_SIMULATOR_PROGRAM: &str = "/tpm2-simulator";
 /// variable at the command line to specify a different program to run, e.g.
 ///
 /// ```shell
-/// SIMULATOR_BIN="/my/custom/simulator --start" cargo test
+/// SIMULATOR_BIN="/my/custom/simulator" cargo test
 /// ```
 fn get_simulator_path() -> String {
     std::env::var(ENV_VAR_SIMULATOR_PROGRAM).unwrap_or(DEFAULT_SIMULATOR_PROGRAM.to_string())
+}
+
+/// Environment variable used to override the arguments to the TPM simulator.
+const ENV_VAR_SIMULATOR_ARGS: &str = "SIMULATOR_ARGS";
+
+/// Default arguments to pass to the TPM simulator.
+const DEFAULT_SIMULATOR_ARGS: &str = "--quiet";
+
+/// Get the arguments to pass to the TPM simulator. Set the environment
+/// variable at the command line to specify different arguments, e.g.
+///
+/// ```shell
+/// SIMULATOR_ARGS="--custom-arg" cargo test
+/// ```
+fn get_simulator_args() -> String {
+    std::env::var(ENV_VAR_SIMULATOR_ARGS).unwrap_or(DEFAULT_SIMULATOR_ARGS.to_string())
 }
 
 /// Structure to manage the subprocess used to spawn the TPM simulator.
@@ -58,12 +74,24 @@ pub struct TpmSimulator(Child);
 impl TpmSimulator {
     fn new() -> anyhow::Result<TpmSimulator> {
         let simulator_bin = get_simulator_path();
-        Ok(TpmSimulator(
-            Command::new(&simulator_bin)
-                .current_dir("/")
-                .spawn()
-                .context(format!("failed to start TPM simulator \"{simulator_bin}\""))?,
-        ))
+        let simulator_args = get_simulator_args();
+
+        let mut bin = Command::new(&simulator_bin);
+        let command = bin.current_dir("/");
+        if simulator_args.is_empty() {
+            Ok(TpmSimulator(command.spawn().context(format!(
+                "failed to start TPM simulator \"{simulator_bin}\""
+            ))?))
+        } else {
+            Ok(TpmSimulator(
+                command
+                    .args(simulator_args.split(' '))
+                    .spawn()
+                    .context(format!(
+                        "failed to start TPM simulator \"{simulator_bin} {simulator_args}\""
+                    ))?,
+            ))
+        }
     }
 }
 

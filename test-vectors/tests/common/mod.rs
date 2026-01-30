@@ -1,8 +1,6 @@
 use std::error::Error;
 
-use tpm2_test_vectors::{
-    CommandResponsePair, Harness, TestRequirement, TpmTestVector, check_command_response_pair,
-};
+use tpm2_test_vectors::{CommandResponsePair, Harness, TestRequirement, TpmTestVector};
 
 /// run_test_vector applies the `input` test vector to the TPM using the
 /// `harness` that implements the [`Harness`] trait.
@@ -18,7 +16,7 @@ where
     }
 
     for command in test_case.test_sequence {
-        check_command_response_pair(&command)?;
+        command.check()?;
 
         let mut resp = vec![0; command.response.len()];
         harness.transact(&command.input, &mut resp)?;

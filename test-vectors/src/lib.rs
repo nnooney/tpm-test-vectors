@@ -23,25 +23,6 @@ pub enum TestRequirement {
     FailureMode,
 }
 
-/// A CommandResponsePair represents a single round-trip of bytes sent between
-/// the client and the TPM.
-#[derive(Debug, Deserialize, Serialize)]
-pub struct CommandResponsePair {
-    /// A descriptive name of the step to perform. This ends up in error
-    /// messages.
-    pub step: String,
-    /// The input bytes to send to the TPM.
-    #[serde(with = "hex")]
-    pub input: Vec<u8>,
-    /// The expected response bytes received from the TPM.
-    #[serde(with = "hex")]
-    pub response: Vec<u8>,
-    /// A mask to apply to the response. If provided, it should have the same
-    /// length as the response.
-    #[serde(with = "hex")]
-    pub response_mask: Vec<u8>,
-}
-
 /// A TpmTestVector is a single test case run against a TPM.
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TpmTestVector {

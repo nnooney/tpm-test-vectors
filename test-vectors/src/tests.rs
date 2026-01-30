@@ -5,7 +5,6 @@ use rstest::rstest;
 
 use crate::CommandResponsePair;
 use crate::TpmTestVector;
-use crate::check_command_response_pair;
 
 #[rstest]
 fn test_check_command_response_pair_success(
@@ -16,7 +15,7 @@ fn test_check_command_response_pair_success(
     let test_vector: TpmTestVector = ron::from_str(input)?;
 
     for command in test_vector.test_sequence {
-        check_command_response_pair(&command)?;
+        command.check()?;
     }
 
     Ok(())
@@ -42,7 +41,7 @@ fn test_check_command_response_pair_errors(
         )
     })?;
 
-    let result = check_command_response_pair(&command);
+    let result = command.check();
 
     match result {
         Ok(()) => {

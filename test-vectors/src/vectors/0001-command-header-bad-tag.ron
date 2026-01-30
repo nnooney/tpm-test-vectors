@@ -1,3 +1,5 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
 // The TPM shall successfully unmarshal a TPMI_ST_COMMAND_TAG and verify that it
 // is either TPM_ST_SESSIONS or TPM_ST_NO_SESSIONS (TPM_RC_BAD_TAG).
 TpmTestVector(

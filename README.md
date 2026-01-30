@@ -303,6 +303,7 @@ The following environment variables and defaults are used:
 | -------------------- | ----------------- | --------------------------------- |
 | `SIMULATOR_BIN`      | `/tpm2-simulator` | Program to run the TPM simulator. |
 | `SIMULATOR_IP`       | `127.0.0.1`       | IP address to connect to.         |
+| `SIMULATOR_ARGS`     |                   | Arguments for the TPM simulator.  |
 
 This repo also provides a Docker container which builds the TCG reference TPM
 simulator and runs the test vectors against it.

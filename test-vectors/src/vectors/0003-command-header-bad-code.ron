@@ -1,3 +1,5 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
 // The TPM shall successfully unmarshal a TPM_CC and verify that the command is
 // implemented (TPM_RC_COMMAND_CODE).
 TpmTestVector(

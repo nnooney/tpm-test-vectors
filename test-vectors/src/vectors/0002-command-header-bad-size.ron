@@ -1,3 +1,5 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
 // The TPM shall successfully unmarshal a UINT32 as the commandSize. If the TPM
 // has an interface buffer that is loaded by some hardware process, the number
 // of octets in the input buffer for the command reported by the hardware

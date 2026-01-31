@@ -18,6 +18,34 @@ TpmTestVector(
       input: "80010000000c000001440000",
       response: "80010000000a00000101",
       response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+    (
+      step: "Issue command allowed in failure mode (TPM_CC_GetTestResult)",
+      // Command = TPM_GetTestResult
+      input: "80010000000a0000017c",
+      response: "80010000000a00000000",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+    (
+      step: "Issue command allowed in failure mode (TPM_CC_GetCapability)",
+      // Command = TPM_GetCapability
+      input: "80010000000c000001440000",
+      response: "80010000000a00000101",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+    ),
+    (
+      step: "Issue command using TPM_ST_SESSIONS",
+      // Command = TPM_GetCapability
+      input: "80010000000c000001440000",
+      response: "80010000000a00000101",
+      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     )
   ]
 )
+
+// The TPM can enter Failure mode during _TPM_Init processing, before
+// TPM2_Startup(). Since the platform firmware cannot know that the TPM is in
+// Failure mode without accessing it, and since the first command is required to
+// be TPM2_Startup(), the expected sequence will be that platform firmware (the
+// CRTM) will issue TPM2_Startup() and receive TPM_RC_FAILURE indicating that
+// the TPM is in Failure mode.

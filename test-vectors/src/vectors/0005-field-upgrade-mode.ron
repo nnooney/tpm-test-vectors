@@ -1,0 +1,16 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
+// The TPM is in Field Upgrade mode (FUM), the commandCode is
+// TPM_CC_FieldUpgradeData (TPM_RC_UPGRADE).
+TpmTestVector(
+  name: "[Mode Check] field upgrade mode",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)
+
+// The TPM Reference implementation does not implement field upgrade mode
+// commands, so it is difficult to write a test vector that I cannot check for
+// correctness.

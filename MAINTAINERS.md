@@ -3,25 +3,24 @@
 This document lists the Maintainers of the Repo. Maintainers may be added
 once approved by the existing maintainers as described in [Repo Governance].
 By adding your name to this list you are agreeing to
-abide by the  [Repo Governance] documents and to abide by all of the
+abide by the [Repo Governance] documents and to abide by all of the
 Project's policies, including the
 
-* [TPM-RS Charter],
-* [Trademark Policy],
-* [Antitrust Policy],
-* [Code of Conduct],
-* [Repo's License],
-* [Security Policy], and
-* the [Contributor License Agreement].
+- [TPM-RS Charter],
+- [Trademark Policy],
+- [Antitrust Policy],
+- [Code of Conduct],
+- [Repo's License],
+- [Security Policy], and
+- the [Contributor License Agreement].
 
 If you are participating because of your
 affiliation with another organization (designated below), you represent that you
 have the authority to bind that organization to these policies.
 
 | **NAME** | **Organization** | **TCG Member (optional)** |
-| --- | --- | --- |
-| bradlitterell | Microsoft | yes |
-| chrisfenner | Google | yes |
+| -------- | ---------------- | ------------------------- |
+| nnooney  | Google           | yes                       |
 
 ## Attribution
 

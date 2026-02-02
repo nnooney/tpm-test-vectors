@@ -1,6 +1,8 @@
 use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
+use serde_with::hex::Hex;
+use serde_with::serde_as;
 
 /// Types of errors for a [`CommandResponseError`].
 #[derive(Debug)]
@@ -61,21 +63,25 @@ impl Error for CommandResponseError {
 
 /// A CommandResponsePair represents a single round-trip of bytes sent between
 /// the client and the TPM.
+#[serde_as]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandResponsePair {
     /// A descriptive name of the step to perform. This ends up in error
     /// messages.
     pub step: String,
     /// The input bytes to send to the TPM.
-    #[serde(with = "hex")]
+    #[serde_as(as = "Hex")]
     pub input: Vec<u8>,
-    /// The expected response bytes received from the TPM.
-    #[serde(with = "hex")]
+    /// The expected response bytes received from the TPM. This may be shorter
+    /// than the actual received response, in which case it is expected to
+    /// match a prefix of the response.
+    #[serde_as(as = "Hex")]
     pub response: Vec<u8>,
-    /// A mask to apply to the response. If provided, it should have the same
-    /// length as the response.
-    #[serde(with = "hex")]
-    pub response_mask: Vec<u8>,
+    /// A mask to apply to the response. If provided, it must have the same
+    /// length as the response. When not provided, the mask is treated as all
+    /// 0xff bytes.
+    #[serde_as(as = "Option<Hex>")]
+    pub response_mask: Option<Vec<u8>>,
 }
 
 impl CommandResponsePair {
@@ -99,7 +105,9 @@ impl CommandResponsePair {
 
         // If a response mask is provided, it should have the same length as the
         // response.
-        if !self.response_mask.is_empty() && self.response_mask.len() != self.response.len() {
+        if let Some(response_mask) = &self.response_mask
+            && response_mask.len() != self.response.len()
+        {
             return Err(CommandResponseError::new(
                 &self.step,
                 CommandResponseErrorKind::ResponseMaskLengthDoesNotMatchResponseLength,

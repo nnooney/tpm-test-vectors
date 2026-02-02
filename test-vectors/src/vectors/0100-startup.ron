@@ -1,3 +1,5 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
 TpmTestVector(
   name: "Tpm Startup",
   spec_versions: [

@@ -1,3 +1,5 @@
+#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+
 CommandResponsePair(
   step: "[test] Response mask length mismatch",
   input: "000100000010060708090a0b0c0d0e0f",

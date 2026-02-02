@@ -18,10 +18,14 @@ where
     for command in test_case.test_sequence {
         command.check()?;
 
-        let mut resp = vec![0; command.response.len()];
+        let mut resp = [0u8; tpm2_rs_client::RESP_BUFFER_SIZE];
         harness.transact(&command.input, &mut resp)?;
+        // https://github.com/tpm-rs/tpm-rs/issues/208 will simplify this code
+        // by returning the size of the response; until then, check the size
+        // from the response buffer.
+        let resp_size = u32::from_be_bytes(resp[2..6].try_into()?);
 
-        evaluate_command_response_pair(&command, &resp)?;
+        evaluate_command_response_pair(&command, &resp[..resp_size as usize])?;
     }
 
     Ok(())
@@ -54,22 +58,40 @@ fn evaluate_command_response_pair(
     command: &CommandResponsePair,
     resp: &[u8],
 ) -> anyhow::Result<()> {
-    // Require the responses to have the same length.
-    if command.response.len() != resp.len() {
+    // The response buffer must be at least as long as the expected response.
+    if resp.len() < command.response.len() {
         return Err(anyhow::anyhow!(
-            r#"step "{}" response length mismatch
-want: {}
- got: {}"#,
-            command.step,
-            command.response.len(),
-            resp.len(),
+            r#"
+step "{step}" TPM response too short
+  want: >= {want}
+   got: {got}"#,
+            step = command.step,
+            want = command.response.len(),
+            got = resp.len(),
         ));
     }
 
-    assert_eq!(
-        resp, command.response,
-        "step \"{}\" response mismatch",
-        command.step
-    );
+    // Each byte in the expected response must match the response.
+    for (i, byte) in command.response.iter().enumerate() {
+        let mask = command.response_mask.as_ref().map_or(0xff, |m| m[i]);
+        if *byte & mask != resp[i] & mask {
+            return Err(anyhow::anyhow!(
+                r#"
+step "{step}" response mismatch,
+  mask: {mask}
+  want: {want}
+   got: {got}
+        {pad:width$}^^ mismatch begins at byte {byte}"#,
+                step = command.step,
+                mask = hex::encode(command.response_mask.as_ref().unwrap_or(&vec![])),
+                want = hex::encode(&command.response),
+                got = hex::encode(resp),
+                pad = ' ',
+                width = i * 2, // two hex chars per byte
+                byte = i,
+            ));
+        }
+    }
+
     Ok(())
 }

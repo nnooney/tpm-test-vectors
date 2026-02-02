@@ -23,8 +23,8 @@ TpmTestVector(
       step: "Issue command allowed in failure mode (TPM_CC_GetTestResult)",
       // Command = TPM_GetTestResult
       input: "80010000000a0000017c",
-      response: "80010000000a00000000",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
+      response: "80010000000000000000",
+      response_mask: "FFFF00000000FFFFFFFF",
     ),
     (
       step: "Issue command allowed in failure mode (TPM_CC_GetCapability)",

@@ -1,4 +1,5 @@
 #![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+#![enable(unwrap_variant_newtypes)] // Prevents writing inner types of enums.
 
 // The TPM shall successfully unmarshal a UINT32 as the commandSize. If the TPM
 // has an interface buffer that is loaded by some hardware process, the number
@@ -10,14 +11,14 @@ TpmTestVector(
     184,
   ],
   test_sequence: [
-    (
+    SendCommand(
       step: "Issue command header with invalid size",
       // Command size = 01234567, nonsensical
       input: "80010123456700000000",
       response: "80010000000a00000142",
       response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
-    (
+    SendCommand(
       step: "Issue command header with valid but incorrect size",
       // Command size = 0
       input: "80010000000000000000",

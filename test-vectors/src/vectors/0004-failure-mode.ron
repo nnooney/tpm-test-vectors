@@ -1,4 +1,5 @@
 #![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+#![enable(unwrap_variant_newtypes)] // Prevents writing inner types of enums.
 
 // If the TPM is in Failure mode, then the commandCode is TPM_CC_GetTestResult
 // or TPM_CC_GetCapability (TPM_RC_FAILURE) and the command tag is
@@ -8,32 +9,30 @@ TpmTestVector(
   spec_versions: [
     184,
   ],
-  requirements: [
-    FailureMode,
-  ],
   test_sequence: [
-    (
+    EnterFailureMode,
+    SendCommand(
       step: "Issue command not allowed in failure mode",
       // Command = TPM_Startup
       input: "80010000000c000001440000",
       response: "80010000000a00000101",
       response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
-    (
+    SendCommand(
       step: "Issue command allowed in failure mode (TPM_CC_GetTestResult)",
       // Command = TPM_GetTestResult
       input: "80010000000a0000017c",
       response: "80010000000000000000",
       response_mask: "FFFF00000000FFFFFFFF",
     ),
-    (
+    SendCommand(
       step: "Issue command allowed in failure mode (TPM_CC_GetCapability)",
       // Command = TPM_GetCapability
       input: "80010000000c000001440000",
       response: "80010000000a00000101",
       response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
-    (
+    SendCommand(
       step: "Issue command using TPM_ST_SESSIONS",
       // Command = TPM_GetCapability
       input: "80010000000c000001440000",

@@ -1,4 +1,5 @@
 #![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+#![enable(unwrap_variant_newtypes)] // Prevents writing inner types of enums.
 
 // The TPM shall successfully unmarshal a TPM_CC and verify that the command is
 // implemented (TPM_RC_COMMAND_CODE).
@@ -8,14 +9,14 @@ TpmTestVector(
     184,
   ],
   test_sequence: [
-    (
+    SendCommand(
       step: "Issue command header with invalid code",
       // Command code = 01234567, nonsensical
       input: "80010000000a01234567",
       response: "80010000000a00000143",
       response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
-    (
+    SendCommand(
       step: "Issue command header with zero code",
       // Command code = 0
       input: "80010000000a00000000",

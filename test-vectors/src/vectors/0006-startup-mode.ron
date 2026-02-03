@@ -1,4 +1,5 @@
 #![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
+#![enable(unwrap_variant_newtypes)] // Prevents writing inner types of enums.
 
 // If the TPM has not been initialized (TPM2_Startup()), then the commandCode is
 // TPM_CC_Startup (TPM_RC_INITIALIZE).
@@ -8,7 +9,7 @@ TpmTestVector(
     184,
   ],
   test_sequence: [
-    (
+    SendCommand(
       step: "Issue command before startup",
       // Command = TPM_SelfTest
       input: "80010000000b0000014300",

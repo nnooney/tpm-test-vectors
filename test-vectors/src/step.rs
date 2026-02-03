@@ -117,3 +117,24 @@ impl CommandResponsePair {
         Ok(())
     }
 }
+
+/// Types of steps in a test sequence.
+#[derive(Debug, Deserialize, Serialize)]
+#[non_exhaustive]
+pub enum TestStep {
+    /// Send a command to the TPM and check its response.
+    SendCommand(CommandResponsePair),
+    /// Cause the TPM to enter failure mode.
+    EnterFailureMode,
+}
+
+impl TestStep {
+    /// check ensures the TestStep is well-formed. Errors returned from this
+    /// function indicate issues in the authoring of the TestStep.
+    pub fn check(&self) -> Result<(), CommandResponseError> {
+        match self {
+            Self::SendCommand(pair) => pair.check(),
+            Self::EnterFailureMode => Ok(()),
+        }
+    }
+}

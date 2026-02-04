@@ -10,7 +10,7 @@ ron = "0.12.0"
 rstest = "0.26.1"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_with = { version = "3.16.1", features = ["hex"] }
-tpm2-rs-client = { path = "../tpm-rs/client" }
+tpm2-rs-client = { git = "https://github.com/tpm-rs/tpm-rs.git" }
 
 # Common workspace crates
 tpm2-test-vectors = { path = "test-vectors" }

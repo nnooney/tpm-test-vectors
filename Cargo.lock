@@ -740,6 +740,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-base"
 version = "0.0.1"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 dependencies = [
  "bitflags",
  "open-enum",
@@ -752,6 +753,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-client"
 version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 dependencies = [
  "tpm2-rs-base",
  "tpm2-rs-marshalable",
@@ -761,10 +763,12 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-errors"
 version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 
 [[package]]
 name = "tpm2-rs-marshalable"
 version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 dependencies = [
  "safe-discriminant",
  "tpm2-rs-errors",
@@ -774,6 +778,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-marshalable-derive"
 version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -783,6 +788,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-unionify"
 version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 dependencies = [
  "tpm2-rs-unionify-derive",
 ]
@@ -790,6 +796,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-unionify-derive"
 version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -936,18 +943,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.34"
+version = "0.8.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "71ddd76bcebeed25db614f82bf31a9f4222d3fbba300e6fb6c00afa26cbd4d9d"
+checksum = "57cf3aa6855b23711ee9852dfc97dfaa51c45feaba5b645d0c777414d494a961"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.34"
+version = "0.8.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d8187381b52e32220d50b255276aa16a084ec0a9017a0ca2152a1f55c539758d"
+checksum = "8a616990af1a287837c4fe6596ad77ef57948f787e46ce28e166facc0cc1cb75"
 dependencies = [
  "proc-macro2",
  "quote",

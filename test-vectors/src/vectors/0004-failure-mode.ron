@@ -20,10 +20,21 @@ TpmTestVector(
       input: "80010000000a0000017c",
       response: "8001********00000000",
     ),
+    //  While in Failure mode, the TPM is only required to provide a limited
+    //  number of property values. They are all in the set of TPM properties
+    //  (TPM_CAP_TPM_PROPERTIES):
+    // • TPM_PT_MANUFACTURER
+    // • TPM_PT_VENDOR_STRING_1
+    // • TPM_PT_VENDOR_STRING_2
+    // • TPM_PT_VENDOR_STRING_3
+    // • TPM_PT_VENDOR_STRING_4
+    // • TPM_PT_VENDOR_TPM_TYPE
+    // • TPM_PT_FIRMWARE_VERSION_1
+    // • TPM_PT_FIRMWARE_VERSION_2
     SendCommand(
       step: "Issue command allowed in failure mode (TPM_CC_GetCapability)",
       // Command = TPM_GetCapability
-      input: "80010000000c000001440000",
+      input: "8001000000160000017a000000060000010500000008",
       response: "80010000000a00000101",
     ),
     SendCommand(

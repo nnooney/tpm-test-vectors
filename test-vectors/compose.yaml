@@ -1,6 +1,10 @@
 services:
   simulator_tests:
-    build: .
+    build:
+      context: git@github.com:TrustedComputingGroup/TPM-Internal.git#185-feature
+      args:
+        TPM_SOURCES: git@github.com:TrustedComputingGroup/TPM-Internal.git#185-feature
+      ssh: ["default"]
     volumes:
       - ../:/tpm
     command: bash -c 'SIMULATOR_ARGS=--quiet cargo test -p tpm2-test-vectors -- --nocapture --test-threads=1'

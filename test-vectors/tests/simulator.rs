@@ -1,22 +1,8 @@
-use anyhow::Context;
 use rstest::rstest;
-use std::process::{Child, Command};
-use tpm2_rs_client::connection::{Connection, SimulatorPlatformSignal, TcpConnection};
+use tpm2_rs_client::connection::{Connection, TcpConnection, TcpSimulator};
 use tpm2_test_vectors::{Harness, HarnessError};
 
 mod common;
-
-#[rstest]
-fn simulator(
-    #[files("src/vectors/*.ron")]
-    #[mode = str]
-    input: &str,
-) -> anyhow::Result<()> {
-    let _simulator = TpmSimulator::new()?;
-    let mut harness = TpmSimulatorHarness::new()?;
-
-    common::run_test_vector(input, &mut harness)
-}
 
 /// Environment variable used to connect to the TPM simulator over TCP.
 const ENV_VAR_SIMULATOR_IP: &str = "SIMULATOR_IP";
@@ -56,7 +42,7 @@ fn get_simulator_path() -> String {
 const ENV_VAR_SIMULATOR_ARGS: &str = "SIMULATOR_ARGS";
 
 /// Default arguments to pass to the TPM simulator.
-const DEFAULT_SIMULATOR_ARGS: &str = "--quiet";
+const DEFAULT_SIMULATOR_ARGS: &str = "";
 
 /// Get the arguments to pass to the TPM simulator. Set the environment
 /// variable at the command line to specify different arguments, e.g.
@@ -64,58 +50,36 @@ const DEFAULT_SIMULATOR_ARGS: &str = "--quiet";
 /// ```shell
 /// SIMULATOR_ARGS="--custom-arg" cargo test
 /// ```
-fn get_simulator_args() -> String {
-    std::env::var(ENV_VAR_SIMULATOR_ARGS).unwrap_or(DEFAULT_SIMULATOR_ARGS.to_string())
-}
-
-/// Structure to manage the subprocess used to spawn the TPM simulator.
-pub struct TpmSimulator(Child);
-
-impl TpmSimulator {
-    fn new() -> anyhow::Result<TpmSimulator> {
-        let simulator_bin = get_simulator_path();
-        let simulator_args = get_simulator_args();
-
-        let mut bin = Command::new(&simulator_bin);
-        let command = bin.current_dir("/");
-        if simulator_args.is_empty() {
-            Ok(TpmSimulator(command.spawn().context(format!(
-                "failed to start TPM simulator \"{simulator_bin}\""
-            ))?))
-        } else {
-            Ok(TpmSimulator(
-                command
-                    .args(simulator_args.split(' '))
-                    .spawn()
-                    .context(format!(
-                        "failed to start TPM simulator \"{simulator_bin} {simulator_args}\""
-                    ))?,
-            ))
-        }
-    }
-}
-
-impl Drop for TpmSimulator {
-    fn drop(&mut self) {
-        if let Err(x) = self.0.kill() {
-            println!("Failed to stop simulator: {x}");
-        }
-    }
+fn get_simulator_args() -> Vec<String> {
+    std::env::var(ENV_VAR_SIMULATOR_ARGS)
+        .unwrap_or(DEFAULT_SIMULATOR_ARGS.to_string())
+        .split_whitespace()
+        .map(|s| s.to_string())
+        .collect()
 }
 
 /// Structure which implements the [`harness::Harness`] trait for interacting
 /// with the TPM simulator.
 pub struct TpmSimulatorHarness {
-    conn: TcpConnection,
+    simulator: TcpSimulator,
 }
 
 type TcpConnectionError = <TcpConnection as Connection>::Error;
 
 impl TpmSimulatorHarness {
     pub fn new() -> anyhow::Result<TpmSimulatorHarness> {
-        Ok(TpmSimulatorHarness {
-            conn: connect_to_simulator()?,
-        })
+        let simulator = TcpSimulator::new(
+            get_simulator_path(),
+            get_simulator_args().as_slice(),
+            &get_simulator_ip(),
+        )?;
+
+        Ok(TpmSimulatorHarness { simulator })
+    }
+
+    pub fn init_tpm(&mut self) -> Result<(), HarnessError<TcpConnectionError>> {
+        self.simulator.connection_mut().reinit()?;
+        Ok(())
     }
 }
 
@@ -125,38 +89,24 @@ impl Harness<TcpConnectionError> for TpmSimulatorHarness {
         cmd: &[u8],
         rsp: &mut [u8],
     ) -> Result<(), HarnessError<TcpConnectionError>> {
-        self.conn.transact(cmd, rsp)?;
+        self.simulator.connection_mut().transact(cmd, rsp)?;
         Ok(())
     }
 
     fn set_failure_mode(&mut self) -> Result<(), HarnessError<TcpConnectionError>> {
-        self.conn.test_failure_mode()?;
+        self.simulator.connection_mut().test_failure_mode()?;
         Ok(())
     }
 }
 
-/// Function to connect to the TPM simulator, with retry logic.
-fn connect_to_simulator() -> anyhow::Result<TcpConnection> {
-    let mut attempts = 0;
+#[rstest]
+fn simulator(
+    #[files("src/vectors/*.ron")]
+    #[mode = str]
+    input: &str,
+) -> anyhow::Result<()> {
+    let mut harness = TpmSimulatorHarness::new()?;
+    harness.init_tpm()?;
 
-    let mut conn = loop {
-        attempts += 1;
-        match TcpConnection::new_default(&get_simulator_ip()) {
-            Ok(conn) => break conn,
-            Err(err) => {
-                if attempts > 3 {
-                    return Err(err.into());
-                }
-                std::thread::sleep(std::time::Duration::from_secs(1));
-            }
-        }
-    };
-
-    // Issue the sequence of signals to initialize the TPM simulator.
-    conn.platform_signal(SimulatorPlatformSignal::NvOff)?;
-    conn.platform_signal(SimulatorPlatformSignal::PowerOff)?;
-    conn.platform_signal(SimulatorPlatformSignal::PowerOn)?;
-    conn.platform_signal(SimulatorPlatformSignal::NvOn)?;
-
-    Ok(conn)
+    common::run_test_vector(input, &mut harness)
 }

@@ -740,7 +740,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-base"
 version = "0.0.1"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 dependencies = [
  "bitflags",
  "open-enum",
@@ -753,7 +753,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-client"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 dependencies = [
  "tpm2-rs-base",
  "tpm2-rs-marshalable",
@@ -763,12 +763,12 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-errors"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 
 [[package]]
 name = "tpm2-rs-marshalable"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 dependencies = [
  "safe-discriminant",
  "tpm2-rs-errors",
@@ -778,7 +778,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-marshalable-derive"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -788,7 +788,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-unionify"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 dependencies = [
  "tpm2-rs-unionify-derive",
 ]
@@ -796,7 +796,7 @@ dependencies = [
 [[package]]
 name = "tpm2-rs-unionify-derive"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#dcdc991fa7b06a75729761bcf4dc47ae9202f91e"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#64191f732b72b05279a3a7505300f6b582294f68"
 dependencies = [
  "proc-macro2",
  "quote",

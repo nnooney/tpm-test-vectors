@@ -1,5 +1,5 @@
 use rstest::rstest;
-use tpm2_rs_client::connection::{Connection, TcpConnection, TcpSimulator};
+use tpm2_rs_client::connection::{Connection, TcpSimulator};
 use tpm2_test_vectors::{Harness, HarnessError};
 
 mod common;
@@ -64,8 +64,6 @@ pub struct TpmSimulatorHarness {
     simulator: TcpSimulator,
 }
 
-type TcpConnectionError = <TcpConnection as Connection>::Error;
-
 impl TpmSimulatorHarness {
     pub fn new() -> anyhow::Result<TpmSimulatorHarness> {
         let simulator = TcpSimulator::new(
@@ -77,23 +75,23 @@ impl TpmSimulatorHarness {
         Ok(TpmSimulatorHarness { simulator })
     }
 
-    pub fn init_tpm(&mut self) -> Result<(), HarnessError<TcpConnectionError>> {
+    pub fn init_tpm(&mut self) -> Result<(), HarnessError> {
         self.simulator.connection_mut().reinit()?;
         Ok(())
     }
 }
 
-impl Harness<TcpConnectionError> for TpmSimulatorHarness {
-    fn transact(
+impl Harness for TpmSimulatorHarness {
+    fn transact<'a>(
         &mut self,
         cmd: &[u8],
-        rsp: &mut [u8],
-    ) -> Result<(), HarnessError<TcpConnectionError>> {
-        self.simulator.connection_mut().transact(cmd, rsp)?;
-        Ok(())
+        rsp: &'a mut [u8],
+    ) -> std::result::Result<&'a mut [u8], tpm2_test_vectors::HarnessError> {
+        let resp = self.simulator.connection_mut().transact(cmd, rsp)?;
+        Ok(resp)
     }
 
-    fn set_failure_mode(&mut self) -> Result<(), HarnessError<TcpConnectionError>> {
+    fn set_failure_mode(&mut self) -> Result<(), HarnessError> {
         self.simulator.connection_mut().test_failure_mode()?;
         Ok(())
     }

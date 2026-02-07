@@ -1,15 +1,9 @@
-use std::error::Error;
-
 use anyhow::anyhow;
 use tpm2_test_vectors::{CommandResponsePair, Harness, TestStep, TpmTestVector};
 
 /// run_test_vector applies the `input` test vector to the TPM using the
 /// `harness` that implements the [`Harness`] trait.
-pub fn run_test_vector<E, H>(input: &str, harness: &mut H) -> anyhow::Result<()>
-where
-    E: Error + Send + Sync + 'static,
-    H: Harness<E>,
-{
+pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> anyhow::Result<()> {
     let test_case: TpmTestVector = ron::from_str(input)?;
 
     for step in test_case.test_sequence {
@@ -17,14 +11,10 @@ where
 
         match step {
             TestStep::SendCommand(command) => {
-                let mut resp = [0u8; tpm2_rs_client::RESP_BUFFER_SIZE];
-                harness.transact(&command.input, &mut resp)?;
-                // https://github.com/tpm-rs/tpm-rs/issues/208 will simplify this code
-                // by returning the size of the response; until then, check the size
-                // from the response buffer.
-                let resp_size = u32::from_be_bytes(resp[2..6].try_into()?);
+                let mut buf = [0u8; tpm2_rs_client::RESP_BUFFER_SIZE];
+                let resp = harness.transact(&command.input, &mut buf)?;
 
-                evaluate_command_response_pair(&command, &resp[..resp_size as usize])?;
+                evaluate_command_response_pair(&command, resp)?;
             }
             TestStep::EnterFailureMode => {
                 harness.set_failure_mode()?;

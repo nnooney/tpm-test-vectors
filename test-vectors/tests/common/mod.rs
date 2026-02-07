@@ -47,7 +47,7 @@ step "{step}" TPM response too short
     }
 
     // Each byte in the expected response must match the response.
-    for (i, byte) in command.response.iter().enumerate() {
+    for (i, byte) in command.response.to_bytes()?.iter().enumerate() {
         let mask = command.response_mask.as_ref().map_or(0xff, |m| m[i]);
         if *byte & mask != resp[i] & mask {
             return Err(anyhow!(
@@ -59,7 +59,7 @@ step "{step}" response mismatch,
         {pad:width$}^^ mismatch begins at byte {byte}"#,
                 step = command.step,
                 mask = hex::encode(command.response_mask.as_ref().unwrap_or(&vec![])),
-                want = hex::encode(&command.response),
+                want = command.response.as_ref(),
                 got = hex::encode(resp),
                 pad = ' ',
                 width = i * 2, // two hex chars per byte

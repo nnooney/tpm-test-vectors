@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 use serde_with::hex::Hex;
 use serde_with::serde_as;
 
+use crate::EncodedResponse;
+
 /// Types of errors for a [`CommandResponseError`].
 #[derive(Debug)]
 pub enum CommandResponseErrorKind {
@@ -72,11 +74,8 @@ pub struct CommandResponsePair {
     /// The input bytes to send to the TPM.
     #[serde_as(as = "Hex")]
     pub input: Vec<u8>,
-    /// The expected response bytes received from the TPM. This may be shorter
-    /// than the actual received response, in which case it is expected to
-    /// match a prefix of the response.
-    #[serde_as(as = "Hex")]
-    pub response: Vec<u8>,
+    /// The expected response bytes received from the TPM.
+    pub response: EncodedResponse,
     /// A mask to apply to the response. If provided, it must have the same
     /// length as the response. When not provided, the mask is treated as all
     /// 0xff bytes.

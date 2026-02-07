@@ -5,8 +5,9 @@ use rstest::rstest;
 
 use crate::parse;
 
+// Each step in the real test vectors should pass the check function.
 #[rstest]
-fn test_check_command_response_pair_success(
+fn test_check_step_success(
     #[files("src/vectors/*.ron")]
     #[mode = str]
     input: &str,

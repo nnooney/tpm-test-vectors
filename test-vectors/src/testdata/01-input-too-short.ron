@@ -2,5 +2,4 @@ CommandResponsePair(
   step: "[test] Input too short",
   input: "01020304",
   response: "01020304",
-  response_mask: "FFFFFFFF",
 )

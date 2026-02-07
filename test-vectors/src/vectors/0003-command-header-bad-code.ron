@@ -11,14 +11,12 @@ TpmTestVector(
       // Command code = 01234567, nonsensical
       input: "80010000000a01234567",
       response: "80010000000a00000143",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
     SendCommand(
       step: "Issue command header with zero code",
       // Command code = 0
       input: "80010000000a00000000",
       response: "80010000000a00000143",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
   ]
 )

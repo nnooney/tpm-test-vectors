@@ -1,6 +1,0 @@
-CommandResponsePair(
-  step: "[test] Response mask length mismatch",
-  input: "000100000010060708090a0b0c0d0e0f",
-  response: "000100000010060708090a0b0c0d0e0f",
-  response_mask: "FFFFFFFF",
-)

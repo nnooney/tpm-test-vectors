@@ -13,28 +13,24 @@ TpmTestVector(
       // Command = TPM_Startup
       input: "80010000000c000001440000",
       response: "80010000000a00000101",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
     SendCommand(
       step: "Issue command allowed in failure mode (TPM_CC_GetTestResult)",
       // Command = TPM_GetTestResult
       input: "80010000000a0000017c",
-      response: "80010000000000000000",
-      response_mask: "FFFF00000000FFFFFFFF",
+      response: "8001********00000000",
     ),
     SendCommand(
       step: "Issue command allowed in failure mode (TPM_CC_GetCapability)",
       // Command = TPM_GetCapability
       input: "80010000000c000001440000",
       response: "80010000000a00000101",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
     SendCommand(
       step: "Issue command using TPM_ST_SESSIONS",
       // Command = TPM_GetCapability
       input: "80010000000c000001440000",
       response: "80010000000a00000101",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     )
   ]
 )

@@ -11,7 +11,6 @@ TpmTestVector(
       // Command = TPM_SelfTest
       input: "80010000000b0000014300",
       response: "80010000000a00000100",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     )
   ]
 )

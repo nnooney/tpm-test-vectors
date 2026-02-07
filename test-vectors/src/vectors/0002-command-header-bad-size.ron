@@ -13,14 +13,12 @@ TpmTestVector(
       // Command size = 01234567, nonsensical
       input: "80010123456700000000",
       response: "80010000000a00000142",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
     SendCommand(
       step: "Issue command header with valid but incorrect size",
       // Command size = 0
       input: "80010000000000000000",
       response: "80010000000a00000142",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
   ]
 )

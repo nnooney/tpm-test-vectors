@@ -8,13 +8,11 @@ TpmTestVector(
       step: "Issue TPM Startup Command First (success)",
       input: "80010000000c000001440000",
       response: "80010000000a00000000",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
     SendCommand(
       step: "Issue TPM Startup Command Second (failure)",
       input: "80010000000c000001440000",
       response: "80010000000a00000100",
-      response_mask: "FFFFFFFFFFFFFFFFFFFF",
     ),
   ]
 )

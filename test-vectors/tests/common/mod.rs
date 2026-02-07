@@ -1,10 +1,11 @@
 use anyhow::anyhow;
-use tpm2_test_vectors::{CommandResponsePair, Harness, TestStep, TpmTestVector};
+use tpm2_test_vectors::parse;
+use tpm2_test_vectors::{CommandResponsePair, Harness, TestStep};
 
 /// run_test_vector applies the `input` test vector to the TPM using the
 /// `harness` that implements the [`Harness`] trait.
 pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> anyhow::Result<()> {
-    let test_case: TpmTestVector = ron::from_str(input)?;
+    let test_case = parse::tpm_test_vector(input)?;
 
     for step in test_case.test_sequence {
         step.check()?;

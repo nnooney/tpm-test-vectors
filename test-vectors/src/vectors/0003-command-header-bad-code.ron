@@ -1,6 +1,3 @@
-#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
-#![enable(unwrap_variant_newtypes)] // Prevents writing inner types of enums.
-
 // The TPM shall successfully unmarshal a TPM_CC and verify that the command is
 // implemented (TPM_RC_COMMAND_CODE).
 TpmTestVector(

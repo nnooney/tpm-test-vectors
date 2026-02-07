@@ -1,5 +1,3 @@
-#![enable(implicit_some)] // Prevents the need to write 'Some' for Option<T>.
-
 CommandResponsePair(
   step: "[test] Input too short",
   input: "01020304",

@@ -3,8 +3,7 @@ use core::error::Error;
 use core::fmt::Write;
 use rstest::rstest;
 
-use crate::CommandResponsePair;
-use crate::TpmTestVector;
+use crate::parse;
 
 #[rstest]
 fn test_check_command_response_pair_success(
@@ -12,7 +11,7 @@ fn test_check_command_response_pair_success(
     #[mode = str]
     input: &str,
 ) -> anyhow::Result<()> {
-    let test_vector: TpmTestVector = ron::from_str(input)?;
+    let test_vector = parse::tpm_test_vector(input)?;
 
     for command in test_vector.test_sequence {
         command.check()?;
@@ -34,7 +33,7 @@ fn test_check_command_response_pair_errors(
 ) -> anyhow::Result<()> {
     let contents = std::fs::read_to_string(input)
         .with_context(|| format!("Failed to read testdata file from {}", input))?;
-    let command: CommandResponsePair = ron::from_str(&contents).with_context(|| {
+    let command = parse::command_response_pair(&contents).with_context(|| {
         format!(
             "Failed to parse contents as CommandResponsePair from {}",
             input

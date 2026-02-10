@@ -8,11 +8,12 @@ use crate::parse;
 // Each step in the real test vectors should pass the check function.
 #[rstest]
 fn test_check_step_success(
-    #[files("src/vectors/*.ron")]
+    #[files("*.ron")]
+    #[base_dir = "src/vectors/"]
     #[mode = str]
-    input: &str,
+    tv: &str,
 ) -> anyhow::Result<()> {
-    let test_vector = parse::tpm_test_vector(input)?;
+    let test_vector = parse::tpm_test_vector(tv)?;
 
     for command in test_vector.test_sequence {
         command.check()?;

@@ -1,0 +1,12 @@
+// If the tag is TPM_ST_NO_SESSIONS and the command requires TPM_ST_SESSIONS,
+// the TPM will return TPM_RC_AUTH_MISSING.
+TpmTestVector(
+  name: "[Session Area] bad no sessions tag",
+  spec_versions: [
+    184,
+  ],
+  // Each command with ST_SESSIONS is listed here, where the tag is set to
+  // ST_NO_SESSIONS erroneously.
+  test_sequence: [
+  ]
+)

@@ -18,6 +18,8 @@ TPM implementation, using the `tpm2-client` crate from the
 
 These test vectors are written against v184 of the TPM specification.
 
+https://trustedcomputinggroup.org/resource/tpm-library-specification/
+
 ### Initial TPM state
 
 Each test vector is designed to be run against a TPM that has just been
@@ -58,7 +60,7 @@ the test vectors.
 - [ ] 5 Command Processing
   - [ ] 5.1 Introduction
   - [x] 5.2 Command Header Validation
-  - [ ] 5.3 Mode Checks
+  - [x] 5.3 Mode Checks
   - [ ] 5.4 Handle Area Validation
   - [ ] 5.5 Session Area Validation
   - [ ] 5.6 Authorization Checks
@@ -266,6 +268,20 @@ the test vectors.
 
 </details>
 
+### Test Notes
+
+- The following vectors test all commands meeting certain criteria and must be
+  updated as new commands are introduced in later versions of the specification:
+  - [`0004-failure-mode-command-not-allowed.ron`](test-vectors/src/vectors/0004-failure-mode-command-not-allowed.ron)
+  - [`0009-session-area-bad-sessions-tag.ron`](test-vectors/src/vectors/0009-session-area-bad-sessions-tag.ron)
+  - [`0010-session-area-bad-no-sessions-tag.ron`](test-vectors/src/vectors/0010-session-area-bad-no-sessions-tag.ron)
+- 5.4 Handle Area Validation applies additional edge cases to all commands that
+  use handles.
+  - Wrong number of handles passed to command (0, -1, +1)
+  - Value of handle is not consistent with command syntax
+  - Handle for object not loaded in the TPM
+  - Test for handle in each hierarchy
+
 ## Building & Testing
 
 ```
@@ -305,7 +321,7 @@ The following environment variables and defaults are used:
 | `SIMULATOR_IP`       | `127.0.0.1`       | IP address to connect to.         |
 | `SIMULATOR_ARGS`     |                   | Arguments for the TPM simulator.  |
 
-This repo also provides a Docker container which builds the TCG reference TPM
+This repo also provides a Docker compose file which builds the TCG reference TPM
 simulator and runs the test vectors against it.
 
 ```shell

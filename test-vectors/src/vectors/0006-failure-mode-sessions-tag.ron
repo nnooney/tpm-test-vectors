@@ -1,0 +1,18 @@
+// If the TPM is in Failure mode, then the commandCode is TPM_CC_GetTestResult
+// or TPM_CC_GetCapability (TPM_RC_FAILURE) and the command tag is
+// TPM_ST_NO_SESSIONS (TPM_RC_FAILURE).
+TpmTestVector(
+  name: "[Mode Check] failure mode",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    EnterFailureMode,
+    SendCommand(
+      step: "Issue command using TPM_ST_SESSIONS",
+      // Command = TPM_GetCapability
+      input: "80010000000c000001440000",
+      response: "80010000000a00000101",
+    )
+  ]
+)

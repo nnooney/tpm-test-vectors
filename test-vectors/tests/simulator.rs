@@ -99,12 +99,13 @@ impl Harness for TpmSimulatorHarness {
 
 #[rstest]
 fn simulator(
-    #[files("src/vectors/*.ron")]
+    #[files("*.ron")]
+    #[base_dir = "src/vectors/"]
     #[mode = str]
-    input: &str,
+    tv: &str,
 ) -> anyhow::Result<()> {
     let mut harness = TpmSimulatorHarness::new()?;
     harness.init_tpm()?;
 
-    common::run_test_vector(input, &mut harness)
+    common::run_test_vector(tv, &mut harness)
 }

@@ -16,12 +16,12 @@ pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> anyhow::Resu
                 let resp = harness.transact(&command.input, &mut buf)?;
 
                 Response::evaluate(&command.response, resp)
-                    .context(format!("Failure in step \"{step}\"", step = command.step))?;
+                    .context(format!("\nFailure in step \"{step}\"", step = command.step))?;
             }
             TestStep::EnterFailureMode => {
                 harness.set_failure_mode()?;
             }
-            _ => return Err(anyhow!("Unhandled step type {:?}", step)),
+            _ => return Err(anyhow!("\nUnhandled step type {:?}", step)),
         }
     }
 

@@ -1,8 +1,8 @@
 //! A response is an encoded string describing the expected response from a
 //! TPM command.
 
+use core::error::Error;
 use core::fmt;
-use core::{error::Error, num};
 use serde::{Deserialize, Serialize};
 
 use crate::parse::{self, ParseError};
@@ -66,20 +66,24 @@ TPM response part extends beyond end of response
   want: >= {want}
    got: {got}"#
             ),
-            Self::PartMismatch(ref want, ref got, ref index, ref matched) => write!(
-                f,
-                r#"
+            Self::PartMismatch(ref want, ref got, ref index, ref matched) => {
+                let prelude = if *matched == 0 { "" } else { "..." };
+                let pad = ' ';
+                let width = if *matched == 0 {
+                    *index
+                } else {
+                    *index + prelude.len()
+                };
+                let nibble = index + matched;
+                write!(
+                    f,
+                    r#"
 TPM response part mismatch
   want: {prelude}{want}
    got: {prelude}{got}
-           {pad:width$}^ mismatch begins at nibble {nibble}"#,
-                prelude = if *matched == 0 { "" } else { "..." },
-                want = want,
-                got = got,
-                pad = ' ',
-                width = *index,
-                nibble = index + matched,
-            ),
+        {pad:width$}^ mismatch begins at index {nibble}"#,
+                )
+            }
         }
     }
 }

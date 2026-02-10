@@ -1,0 +1,36 @@
+// If the TPM is in Failure mode, then the commandCode is TPM_CC_GetTestResult
+// or TPM_CC_GetCapability (TPM_RC_FAILURE)...
+TpmTestVector(
+  name: "[Mode Check] failure mode allowed commands",
+  spec_versions: [
+    184,
+  ],
+  // Note that we're only checking that the status returned from these commands
+  // is TPM_RC_SUCCESS
+  test_sequence: [
+    EnterFailureMode,
+    SendCommand(
+      step: "TPM2_GetTestResult allowed in failure mode",
+      // Command = TPM2_GetTestResult
+      input: "80010000000a0000017c",
+      response: "8001********00000000",
+    ),
+    //  While in Failure mode, the TPM is only required to provide a limited
+    //  number of property values. They are all in the set of TPM properties
+    //  (TPM_CAP_TPM_PROPERTIES):
+    // • TPM_PT_MANUFACTURER
+    // • TPM_PT_VENDOR_STRING_1
+    // • TPM_PT_VENDOR_STRING_2
+    // • TPM_PT_VENDOR_STRING_3
+    // • TPM_PT_VENDOR_STRING_4
+    // • TPM_PT_VENDOR_TPM_TYPE
+    // • TPM_PT_FIRMWARE_VERSION_1
+    // • TPM_PT_FIRMWARE_VERSION_2
+    SendCommand(
+      step: "TPM2_GetCapability allowed in failure mode",
+      // Command = TPM2_GetCapability, request all properties above.
+      input: "8001000000160000017a000000060000010500000008",
+      response: "8001********00000000",
+    ),
+  ]
+)

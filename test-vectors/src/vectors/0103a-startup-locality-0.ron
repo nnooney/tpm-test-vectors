@@ -1,0 +1,10 @@
+// A platform-specific specification may restrict the localities at which
+// TPM2_Startup() may be received.
+TpmTestVector(
+  name: "[TPM2_Startup] issue at locality 0",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

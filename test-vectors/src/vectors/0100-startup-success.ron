@@ -1,0 +1,17 @@
+// TPM2_Startup() is always preceded by _TPM_Init, which is the physical
+// indication that TPM initialization is necessary because of a system-wide
+// reset. TPM2_Startup() is only valid after _TPM_Init.
+TpmTestVector(
+  name: "[TPM2_Startup] success",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    //
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "80010000000c000001440000",
+      response: "80010000000a00000000",
+    ),
+  ]
+)

@@ -1,0 +1,13 @@
+// If the command completes successfully, the tag of the command determines if
+// any authorization sessions will be in the response. If so, the TPM will
+// encrypt the first parameter of the response if indicated by the authorization
+// attributes. The TPM will then generate a new nonce value for each session
+// and, if appropriate, generate an HMAC.
+TpmTestVector(
+  name: "[Command Post Processing] Update sessions",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

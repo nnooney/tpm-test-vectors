@@ -1,0 +1,11 @@
+//  If a TPM requires TPM2_Startup() and another command is received, or if the
+//  TPM receives TPM2_Startup() when it is not required, the TPM shall return
+//  TPM_RC_INITIALIZE.
+TpmTestVector(
+  name: "[TPM2_Startup] other commands not allowed when startup is needed",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

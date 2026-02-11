@@ -1,5 +1,7 @@
+// Additional TPM2_Startup() commands are not allowed after it has completed
+// successfully.
 TpmTestVector(
-  name: "Tpm Startup x2",
+  name: "[TPM2_Startup] startup not allowed after success",
   spec_versions: [
     184,
   ],
@@ -12,7 +14,7 @@ TpmTestVector(
     SendCommand(
       step: "Issue TPM Startup Command Second (failure)",
       input: "80010000000c000001440000",
-      response: "80010000000a00000100",
+      response: "80010000000a00000100",  // TPM_RC_INITIALIZE
     ),
   ]
 )

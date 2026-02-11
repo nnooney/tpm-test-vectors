@@ -1,0 +1,10 @@
+// if the command is being audited by Command Audit, the audit digest is updated
+// with the cpHash of the command and rpHash of the response.
+TpmTestVector(
+  name: "[Command Post Processing] Update cpHash",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

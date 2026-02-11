@@ -1,0 +1,11 @@
+// If an authorization session has the TPMA_SESSION.decrypt attribute SET, and
+// the command does not allow a command parameter to be encrypted, then the TPM
+// will return TPM_RC_ATTRIBUTES.
+TpmTestVector(
+  name: "[Parameter Decryption] Decrypt for commands without parameter encryption",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

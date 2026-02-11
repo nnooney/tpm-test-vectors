@@ -14,6 +14,15 @@ TPM implementation, using the `tpm2-client` crate from the
 
 ## Test Vector Details
 
+### Pass / Fail
+
+Rust's `cargo test` framework does not support skipping tests at runtime; it only
+reports pass or fail. Consequently, test vectors for features unsupported by the
+target TPM will report as **failed**.
+
+Do not expect all tests to pass unless the TPM implementation supports every
+command, feature, and algorithm in the specification.
+
 ### TPM Specification
 
 These test vectors are written against v184 of the TPM specification.

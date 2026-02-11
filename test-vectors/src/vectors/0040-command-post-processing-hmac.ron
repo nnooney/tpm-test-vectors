@@ -1,0 +1,24 @@
+// If authorization HMAC computations are performed on the response, the HMAC
+// keys used in the response will be the same as the HMAC keys used in
+// processing the HMAC in the command.
+//
+// Note: This primarily affects authorizations associated with a first write to
+// an NV Index using a bound session. The computation of the HMAC in the
+// response is performed as if the Name of the Index did not change as a
+// consequence of the command actions. The session binding to the NV Index will
+// not persist to any subsequent command.
+//
+// The authorization attributes were validated during the session area
+// validation to ensure that only one session was used for parameter encryption
+// of the response and that the command allowed encryption in the response.
+//
+// No session nonce value is used for a password authorization, but the session
+// data is present.
+TpmTestVector(
+  name: "[Command Post Processing] Update HMAC",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

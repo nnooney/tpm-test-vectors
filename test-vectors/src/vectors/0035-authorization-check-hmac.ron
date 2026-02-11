@@ -1,0 +1,11 @@
+// If the authorization uses an HMAC, then the HMAC is properly constructed
+// using the authValue associated with the handle and/or the session secret
+// (TPM_RC_AUTH_FAIL or TPM_RC_BAD_AUTH).
+TpmTestVector(
+  name: "[Authorization Checks] HMAC session authValue for handle and session secret",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

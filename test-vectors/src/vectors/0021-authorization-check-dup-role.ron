@@ -1,0 +1,10 @@
+// If the command requires a handle to have DUP role authorization, then the
+// associated authorization session is a policy session (TPM_RC_AUTH_TYPE).
+TpmTestVector(
+  name: "[Authorization Checks] DUP role authorization",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

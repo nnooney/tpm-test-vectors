@@ -1,0 +1,11 @@
+// if policySession→cpHash contains a template, and the command is
+// TPM2_Create(), TPM2_CreatePrimary(), or TPM2_CreateLoaded(), then the
+// inPublic parameter matches the contents of policySession→cpHash.
+TpmTestVector(
+  name: "[Authorization Checks] Policy session cpHash with template",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

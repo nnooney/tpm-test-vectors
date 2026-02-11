@@ -1,0 +1,14 @@
+// If the entity being authorized is an object and its userWithAuth attribute is
+// CLEAR, then the associated authorization session is a policy session
+// (TPM_RC_POLICY_FAIL).
+//
+// Note: There is no check for a hierarchy, because a hierarchy operates as if
+// userWithAuth is SET.
+TpmTestVector(
+  name: "[Authorization Checks] USER role authorization for objects",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

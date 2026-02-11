@@ -1,0 +1,19 @@
+// If the tag is TPM_ST_SESSIONS, the TPM will attempt to unmarshal an
+// authorizationSize and return TPM_RC_AUTHSIZE if the value is not within an
+// acceptable range.
+//
+// The minimum value is (sizeof(TPM_HANDLE) + sizeof(UINT16) +
+// sizeof(TPMA_SESSION) + sizeof(UINT16)).
+//
+// The maximum value of authorizationSize is equal to commandSize -
+// (sizeof(TPM_ST) + sizeof(UINT32) + sizeof(TPM_CC) + (N sizeof(TPM_HANDLE)) +
+// sizeof(UINT32)) where N is the number of handles associated with the
+// commandCode* and may be zero.
+TpmTestVector(
+  name: "[Session Area] bad authorization area size",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

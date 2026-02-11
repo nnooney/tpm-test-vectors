@@ -1,0 +1,23 @@
+// Only one session is allowed for:
+//
+// 1. session auditing (TPM_RC_ATTRIBUTES) - this session may be used for
+//    encrypt or decrypt but may not be a session that is also used for
+//    authorization (including a policy session);
+//
+// 2. decrypting a command parameter (TPM_RC_ATTRIBUTES) - this may be any of
+//    the authorization sessions, or the audit session, or a session may be
+//    added for the single purpose of decrypting a command parameter, as long as
+//    the total number of sessions does not exceed three; and
+//
+// 3. encrypting a response parameter (TPM_RC_ATTRIBUTES) - this may be any of
+//    the authorization sessions, or the audit session if present, or a session
+//    may be added for the single purpose of encrypting a response parameter, as
+//    long as the total number of sessions does not exceed three.
+TpmTestVector(
+  name: "[Session Area] multiple sessions of the same type",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

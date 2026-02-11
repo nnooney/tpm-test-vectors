@@ -1,0 +1,15 @@
+// If the TPM returns an error other than TPM_RC_AUTH_FAIL, then the TPM shall
+// not alter any TPM state.  If the TPM returns TPM_RC_AUTH_FAIL, then the TPM
+// shall not alter any TPM state other than failedTries.
+//
+// Note: The TPM is permitted to decrease failedTries regardless of any other
+// processing performed by the TPM. That is, the TPM can exit Lockout mode,
+// regardless of the return code.
+TpmTestVector(
+  name: "[Authorization Checks] Failure doesn't alter state",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

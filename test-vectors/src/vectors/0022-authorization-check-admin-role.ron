@@ -1,0 +1,22 @@
+// If the command requires a handle to have ADMIN role authorization:
+//
+// 1. If the entity being authorized is an object and its adminWithPolicy
+//    attribute is SET, or a hierarchy, then the authorization session is a
+//    policy session (TPM_RC_AUTH_TYPE).
+//
+// Note: If adminWithPolicy is CLEAR, then any type of authorization session is
+// allowed.
+//
+// 2. If the entity being authorized is an NV Index, then the associated
+//    authorization session is a policy session.
+//
+// Note: The only commands that are currently defined that require use of ADMIN
+// role authorization are commands that operate on objects and NV Indices.
+TpmTestVector(
+  name: "[Authorization Checks] ADMIN role authorization",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

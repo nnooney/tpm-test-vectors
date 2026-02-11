@@ -1,0 +1,11 @@
+// If the associated handle is TPM_RH_PLATFORM, and the command requires
+// confirmation with physical presence, then physical presence is asserted
+// (TPM_RC_PP).
+TpmTestVector(
+  name: "[Authorization Checks] physical presence",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

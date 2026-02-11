@@ -1,0 +1,10 @@
+// An authorization session is present for each of the handles with the “@”
+// decoration (TPM_RC_AUTH_MISSING).
+TpmTestVector(
+  name: "[Session Area] missing required session",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

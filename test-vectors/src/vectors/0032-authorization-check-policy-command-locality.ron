@@ -1,0 +1,10 @@
+// if policySession→commandLocality has been set, it shall match the locality of
+// the command (TPM_RC_LOCALITY).
+TpmTestVector(
+  name: "[Authorization Checks] Policy session commandLocality",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

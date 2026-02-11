@@ -1,0 +1,10 @@
+// If the session handle is not a handle for an HMAC session, a handle for a
+// policy session, or, TPM_RS_PW then the TPM shall return TPM_RC_HANDLE.
+TpmTestVector(
+  name: "[Session Area] bad session handle type",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

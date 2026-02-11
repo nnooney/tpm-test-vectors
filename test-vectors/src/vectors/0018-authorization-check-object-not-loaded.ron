@@ -1,0 +1,10 @@
+// The public and sensitive portions of the object shall be present on the TPM
+// (TPM_RC_AUTH_UNAVAILABLE).
+TpmTestVector(
+  name: "[Authorization Checks] object not loaded",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

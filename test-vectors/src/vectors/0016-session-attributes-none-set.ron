@@ -1,0 +1,10 @@
+// If a session is not being used for authorization, at least one of decrypt,
+// encrypt, or audit must be SET. (TPM_RC_ATTRIBUTES).
+TpmTestVector(
+  name: "[Session Area] no session attributes set",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,0 +1,11 @@
+// If the maximum allowed number of sessions have been unmarshaled and fewer
+// octets than indicated in authorizationSize were unmarshaled (that is,
+// authorizationSize is too large), the TPM shall return TPM_RC_AUTHSIZE.
+TpmTestVector(
+  name: "[Session Area] auth size larger than handles processed",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

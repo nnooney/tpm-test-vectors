@@ -1,0 +1,10 @@
+// if policySession→cpHash has been set, it shall match the cpHash of the
+// command (TPM_RC_POLICY_FAIL).
+TpmTestVector(
+  name: "[Authorization Checks] Policy session cpHash",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

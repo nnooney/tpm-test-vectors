@@ -1,0 +1,10 @@
+// if policySession→pcrUpdateCounter has been set, then it shall match the value
+// of pcrUpdateCounter (TPM_RC_PCR_CHANGED).
+TpmTestVector(
+  name: "[Authorization Checks] Policy session pcrUpdateCounter",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

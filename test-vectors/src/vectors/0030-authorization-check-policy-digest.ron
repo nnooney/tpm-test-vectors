@@ -1,0 +1,10 @@
+// policySession→policyDigest shall match the authPolicy associated with the
+// handle (TPM_RC_POLICY_FAIL).
+TpmTestVector(
+  name: "[Authorization Checks] Policy session policyDigest",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

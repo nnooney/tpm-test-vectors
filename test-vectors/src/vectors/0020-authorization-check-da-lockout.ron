@@ -1,0 +1,17 @@
+// If the object or NV Index is subject to DA protection, and the authorization
+// is with an HMAC or password, then the TPM is not in lockout (TPM_RC_LOCKOUT).
+//
+// Note: An object is subject to DA protection if its noDA attribute is CLEAR.
+// An NV Index is subject to DA protection if its TPMA_NV_NO_DA attribute is
+// CLEAR.
+//
+// Note: An HMAC or password is required in a policy session when the policy
+// contains TPM2_PolicyAuthValue() or TPM2_PolicyPassword().
+TpmTestVector(
+  name: "[Authorization Checks] DA protection and lockout",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

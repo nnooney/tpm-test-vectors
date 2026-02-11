@@ -1,0 +1,11 @@
+// If the command requires a handle to have ADMIN or DUP role authorization and
+// the entity is being authorized with a policy session, that
+// TPM2_PolicyCommandCode() is part of the policy. (TPM_RC_POLICY_FAIL).
+TpmTestVector(
+  name: "[Authorization Checks] TPM2_PolicyCommandCode",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

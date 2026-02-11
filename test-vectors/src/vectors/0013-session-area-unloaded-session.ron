@@ -1,0 +1,11 @@
+// If the session is not loaded, the TPM will return the warning
+// TPM_RC_REFERENCE_S0 + N where N is the number of the session. The first
+// session is session zero, N = 0.
+TpmTestVector(
+  name: "[Session Area] unloaded session",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

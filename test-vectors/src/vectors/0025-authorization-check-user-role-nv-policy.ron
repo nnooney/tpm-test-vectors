@@ -1,0 +1,16 @@
+// If the entity being authorized is an NV Index; if the authorization session
+// is a policy session;
+//
+// 1. the TPMA_NV_POLICYWRITE attribute of the NV Index is SET if the command
+//    modifies the NV Index data (TPM_RC_AUTH_UNAVAILABLE);
+//
+// 2. the TPMA_NV_POLICYREAD attribute of the NV Index is SET if the command
+//    reads the NV Index data (TPM_RC_AUTH_UNAVAILABLE);
+TpmTestVector(
+  name: "[Authorization Checks] USER role authorization for NV with policy session",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

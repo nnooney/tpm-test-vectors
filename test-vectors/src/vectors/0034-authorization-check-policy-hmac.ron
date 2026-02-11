@@ -1,0 +1,10 @@
+// if the policy requires that an authValue be provided in order to satisfy the
+// policy, then session.hmac is not an Empty Buffer.
+TpmTestVector(
+  name: "[Authorization Checks] Policy session authValue with session HMAC",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

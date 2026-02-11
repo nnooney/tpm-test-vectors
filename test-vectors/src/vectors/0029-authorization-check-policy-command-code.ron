@@ -1,0 +1,10 @@
+// if policySession→commandCode has been set, then commandCode of the command
+// shall match (TPM_RC_POLICY_CC).
+TpmTestVector(
+  name: "[Authorization Checks] Policy session commandCode",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

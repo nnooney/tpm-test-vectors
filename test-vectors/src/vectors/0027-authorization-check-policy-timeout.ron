@@ -1,0 +1,10 @@
+// if policySession→timeOut has been set, the session shall not have expired
+// (TPM_RC_EXPIRED).
+TpmTestVector(
+  name: "[Authorization Checks] Policy session timeout",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

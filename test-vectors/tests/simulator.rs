@@ -95,6 +95,11 @@ impl Harness for TpmSimulatorHarness {
         self.simulator.connection_mut().test_failure_mode()?;
         Ok(())
     }
+
+    fn set_locality(&mut self, locality: u8) -> Result<(), HarnessError> {
+        self.simulator.connection_mut().set_locality(locality);
+        Ok(())
+    }
 }
 
 #[rstest]

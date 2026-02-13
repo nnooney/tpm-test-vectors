@@ -14,6 +14,8 @@ pub enum HarnessErrorKind {
     #[non_exhaustive]
     FailureModeUnsupported,
     #[non_exhaustive]
+    LocalityUnsupported,
+    #[non_exhaustive]
     Io(std::io::Error), // Used by TcpConnection
 }
 
@@ -22,6 +24,7 @@ impl fmt::Display for HarnessErrorKind {
         match *self {
             Self::TransactUnsupported => write!(f, "transact fn unsupported"),
             Self::FailureModeUnsupported => write!(f, "failure mode fn unsupported"),
+            Self::LocalityUnsupported => write!(f, "locality fn unsupported"),
             Self::Io(ref _err) => write!(f, "I/O error"),
         }
     }
@@ -86,10 +89,12 @@ pub trait Harness {
     }
 
     /// Set the TPM in failure mode.
-    ///
-    /// This function is required to run test vectors with the
-    /// [`TestRequirement::FailureMode`] requirement.
     fn set_failure_mode(&mut self) -> Result<(), HarnessError> {
         Err(HarnessError::new(HarnessErrorKind::FailureModeUnsupported))
+    }
+
+    /// Set the locality for subsequent commands.
+    fn set_locality(&mut self, _locality: u8) -> Result<(), HarnessError> {
+        Err(HarnessError::new(HarnessErrorKind::LocalityUnsupported))
     }
 }

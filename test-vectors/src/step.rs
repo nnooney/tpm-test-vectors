@@ -6,18 +6,20 @@ use serde_with::serde_as;
 
 use crate::response::EncodedResponse;
 
-/// Types of errors for a [`CommandResponseError`].
+/// Types of errors for a [`TestStepError`].
 #[derive(Debug)]
-pub enum CommandResponseErrorKind {
+pub enum TestStepErrorKind {
     #[non_exhaustive]
     InputTooShort,
     #[non_exhaustive]
     ResponseTooShort,
     #[non_exhaustive]
     ResponseMaskLengthDoesNotMatchResponseLength,
+    #[non_exhaustive]
+    InvalidLocality,
 }
 
-impl fmt::Display for CommandResponseErrorKind {
+impl fmt::Display for TestStepErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
             Self::InputTooShort => write!(f, "input too short"),
@@ -25,11 +27,12 @@ impl fmt::Display for CommandResponseErrorKind {
             Self::ResponseMaskLengthDoesNotMatchResponseLength => {
                 write!(f, "response mask length does not match response length")
             }
+            Self::InvalidLocality => write!(f, "invalid locality"),
         }
     }
 }
 
-impl Error for CommandResponseErrorKind {
+impl Error for TestStepErrorKind {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         None
     }
@@ -37,13 +40,13 @@ impl Error for CommandResponseErrorKind {
 
 /// The error type returned by functions using [`CommandResponsePair`].
 #[derive(Debug)]
-pub struct CommandResponseError {
+pub struct TestStepError {
     step: String,
-    kind: CommandResponseErrorKind,
+    kind: TestStepErrorKind,
 }
 
-impl CommandResponseError {
-    pub fn new(step: &str, kind: CommandResponseErrorKind) -> Self {
+impl TestStepError {
+    pub fn new(step: &str, kind: TestStepErrorKind) -> Self {
         Self {
             step: step.to_string(),
             kind,
@@ -51,13 +54,13 @@ impl CommandResponseError {
     }
 }
 
-impl fmt::Display for CommandResponseError {
+impl fmt::Display for TestStepError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "error in step \"{}\"", self.step)
     }
 }
 
-impl Error for CommandResponseError {
+impl Error for TestStepError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         Some(&self.kind)
     }
@@ -83,18 +86,37 @@ impl CommandResponsePair {
     /// check ensures the CommandResponsePair is well-formed. Errors returned
     /// from this function indicate issues in the authoring of the
     /// CommandResponsePair.
-    pub fn check(&self) -> Result<(), CommandResponseError> {
+    pub fn check(&self) -> Result<(), TestStepError> {
         // Ensure input/response are at least the minimum length
         if self.input.len() < 10 {
-            return Err(CommandResponseError::new(
+            return Err(TestStepError::new(
                 &self.step,
-                CommandResponseErrorKind::InputTooShort,
+                TestStepErrorKind::InputTooShort,
             ));
         }
         if self.response.len() < 10 {
-            return Err(CommandResponseError::new(
+            return Err(TestStepError::new(
                 &self.step,
-                CommandResponseErrorKind::ResponseTooShort,
+                TestStepErrorKind::ResponseTooShort,
+            ));
+        }
+
+        Ok(())
+    }
+}
+
+/// A locality represents the locality to issue TPM commands at.
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Locality(pub u8);
+
+impl Locality {
+    /// check ensures the Locality is well-formed. Errors returned from this
+    /// function indicate issues in the authoring of the Locality.
+    pub fn check(&self) -> Result<(), TestStepError> {
+        if self.0 > 4 && self.0 < 32 {
+            return Err(TestStepError::new(
+                &format!("SetLocality {}", self.0),
+                TestStepErrorKind::InvalidLocality,
             ));
         }
 
@@ -110,15 +132,18 @@ pub enum TestStep {
     SendCommand(CommandResponsePair),
     /// Cause the TPM to enter failure mode.
     EnterFailureMode,
+    /// Set the locality for subsequent commands.
+    SetLocality(Locality),
 }
 
 impl TestStep {
     /// check ensures the TestStep is well-formed. Errors returned from this
     /// function indicate issues in the authoring of the TestStep.
-    pub fn check(&self) -> Result<(), CommandResponseError> {
+    pub fn check(&self) -> Result<(), TestStepError> {
         match self {
             Self::SendCommand(pair) => pair.check(),
             Self::EnterFailureMode => Ok(()),
+            Self::SetLocality(locality) => locality.check(),
         }
     }
 }

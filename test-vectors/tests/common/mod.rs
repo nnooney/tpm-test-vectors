@@ -21,6 +21,9 @@ pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> anyhow::Resu
             TestStep::EnterFailureMode => {
                 harness.set_failure_mode()?;
             }
+            TestStep::SetLocality(locality) => {
+                harness.set_locality(locality.0)?;
+            }
             _ => return Err(anyhow!("\nUnhandled step type {:?}", step)),
         }
     }

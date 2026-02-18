@@ -1,3 +1,4 @@
+# docker compose run --rm simulator_tests
 services:
   simulator_tests:
     build:
@@ -7,4 +8,4 @@ services:
       ssh: ["default"]
     volumes:
       - ../:/tpm
-    command: bash -c 'SIMULATOR_ARGS=--quiet cargo test -p tpm2-test-vectors -- --nocapture --test-threads=1'
+    command: bash -c 'SIMULATOR_ARGS=--pick_ports cargo test -p tpm2-test-vectors'

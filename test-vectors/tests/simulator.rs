@@ -1,4 +1,5 @@
 use rstest::rstest;
+use tempfile::tempdir;
 use tpm2_rs_client::connection::{Connection, TcpSimulator};
 use tpm2_test_vectors::{Harness, HarnessError};
 
@@ -66,9 +67,11 @@ pub struct TpmSimulatorHarness {
 
 impl TpmSimulatorHarness {
     pub fn new() -> anyhow::Result<TpmSimulatorHarness> {
+        let tempdir = tempdir()?;
         let simulator = TcpSimulator::new(
             get_simulator_path(),
             get_simulator_args().as_slice(),
+            tempdir.keep(), // cwd
             &get_simulator_ip(),
         )?;
 

@@ -69,11 +69,7 @@ TPM response part extends beyond end of response
             Self::PartMismatch(ref want, ref got, ref index, ref matched) => {
                 let prelude = if *matched == 0 { "" } else { "..." };
                 let pad = ' ';
-                let width = if *matched == 0 {
-                    *index
-                } else {
-                    *index + prelude.len()
-                };
+                let width = *index + prelude.len();
                 let nibble = index + matched;
                 write!(
                     f,

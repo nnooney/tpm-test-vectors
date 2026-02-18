@@ -1,0 +1,18 @@
+// TPM Restart - This is a Startup(CLEAR) preceded by Shutdown(STATE). This
+// preserves much of the previous state of the TPM except that PCR and the
+// controls associated with the Platform hierarchy are all returned to their
+// default initialization state;
+TpmTestVector(
+  name: "[TPM2_Startup] TPM Restart sequence",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "80010000000c000001440000",
+      response: "80010000000a00000000",
+    ),
+    // TODO: Confirm values have default initialization.
+  ]
+)

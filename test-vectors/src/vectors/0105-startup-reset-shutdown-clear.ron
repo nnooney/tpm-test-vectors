@@ -1,0 +1,23 @@
+// TPM Reset - This is a Startup(CLEAR) preceded by either Shutdown(CLEAR) or no
+// TPM2_Shutdown(). On TPM Reset, all variables go back to their default
+// initialization state.
+//
+// Only those values that are specified as having a default initialization state
+// are changed by TPM Reset. Persistent values that have no default
+// initialization state are not changed by this command. Values such as seeds
+// have no default initialization state and only change due to specific
+// commands.
+TpmTestVector(
+  name: "[TPM2_Startup] TPM Reset sequence after shutdown:clear",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "80010000000c000001440000",
+      response: "80010000000a00000000",
+    ),
+    // TODO: Confirm values have default initialization.
+  ]
+)

@@ -3,12 +3,16 @@
 //!
 //!   1. ron, for parsing test vectors and components within
 //!   2. nom, for parsing encoded responses
+use crate::input::{EncodedInput, Input};
+use crate::parse::input::parse_encoded_input;
+use crate::parse::response::parse_encoded_response;
 use crate::response::{EncodedResponse, Response};
-use crate::{CommandResponsePair, TpmTestVector, parse::response::parse_encoded_response};
+use crate::{CommandResponsePair, TpmTestVector};
 
 use core::fmt;
 use ron::{Options, error::SpannedError, extensions::Extensions};
 
+mod input;
 mod response;
 
 /// Returns the configured ron parser with extensions enabled.
@@ -32,8 +36,8 @@ pub enum ParseError {
 impl fmt::Display for ParseError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
-            Self::Ron(ref _err) => write!(f, "ron parse error"),
-            Self::Nom(ref _err) => write!(f, "nom parse error"),
+            Self::Ron(_) => write!(f, "ron parse error"),
+            Self::Nom(_) => write!(f, "nom parse error"),
         }
     }
 }
@@ -75,6 +79,12 @@ pub fn tpm_test_vector(input: &str) -> Result<TpmTestVector, ParseError> {
 pub fn command_response_pair(input: &str) -> Result<CommandResponsePair, ParseError> {
     let command: CommandResponsePair = ron().from_str(input)?;
     Ok(command)
+}
+
+/// Parses an Input
+pub fn input(input: &EncodedInput) -> Result<Input<'_>, ParseError> {
+    let data = parse_encoded_input(input.as_ref())?;
+    Ok(Input::new(input, data))
 }
 
 /// Parses a Response

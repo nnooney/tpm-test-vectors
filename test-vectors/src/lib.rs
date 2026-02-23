@@ -1,15 +1,14 @@
 use serde::{Deserialize, Serialize};
 
+pub mod input;
 pub mod parse;
+pub mod response;
 
 mod harness;
 pub use harness::*;
 
 mod step;
 pub use step::*;
-
-mod response;
-pub use response::*;
 
 #[cfg(test)]
 mod tests;

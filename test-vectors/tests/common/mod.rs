@@ -1,6 +1,8 @@
 use anyhow::{Context, anyhow};
+use tpm2_test_vectors::input::Input;
 use tpm2_test_vectors::parse;
-use tpm2_test_vectors::{Harness, Response, TestStep};
+use tpm2_test_vectors::response::Response;
+use tpm2_test_vectors::{Harness, TestStep};
 
 /// run_test_vector applies the `input` test vector to the TPM using the
 /// `harness` that implements the [`Harness`] trait.
@@ -13,7 +15,7 @@ pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> anyhow::Resu
         match step {
             TestStep::SendCommand(command) => {
                 let mut buf = [0u8; tpm2_rs_client::RESP_BUFFER_SIZE];
-                let resp = harness.transact(&command.input, &mut buf)?;
+                let resp = harness.transact(&Input::to_tpm_bytes(&command.input)?, &mut buf)?;
 
                 Response::evaluate(&command.response, resp)
                     .context(format!("\nFailure in step \"{step}\"", step = command.step))?;

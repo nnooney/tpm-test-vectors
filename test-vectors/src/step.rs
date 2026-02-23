@@ -1,20 +1,22 @@
 use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
-use serde_with::hex::Hex;
-use serde_with::serde_as;
 
+use crate::input::EncodedInput;
+use crate::parse::{self, ParseError};
 use crate::response::EncodedResponse;
 
 /// Types of errors for a [`TestStepError`].
 #[derive(Debug)]
 pub enum TestStepErrorKind {
     #[non_exhaustive]
+    ParseInput(Box<ParseError>),
+    #[non_exhaustive]
+    ParseResponse(Box<ParseError>),
+    #[non_exhaustive]
     InputTooShort,
     #[non_exhaustive]
     ResponseTooShort,
-    #[non_exhaustive]
-    ResponseMaskLengthDoesNotMatchResponseLength,
     #[non_exhaustive]
     InvalidLocality,
 }
@@ -22,11 +24,10 @@ pub enum TestStepErrorKind {
 impl fmt::Display for TestStepErrorKind {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
+            Self::ParseInput(_) => write!(f, "parse input error"),
+            Self::ParseResponse(_) => write!(f, "parse response error"),
             Self::InputTooShort => write!(f, "input too short"),
             Self::ResponseTooShort => write!(f, "response too short"),
-            Self::ResponseMaskLengthDoesNotMatchResponseLength => {
-                write!(f, "response mask length does not match response length")
-            }
             Self::InvalidLocality => write!(f, "invalid locality"),
         }
     }
@@ -34,7 +35,11 @@ impl fmt::Display for TestStepErrorKind {
 
 impl Error for TestStepErrorKind {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
-        None
+        match *self {
+            Self::ParseInput(ref err) => Some(err.as_ref()),
+            Self::ParseResponse(ref err) => Some(err.as_ref()),
+            _ => None,
+        }
     }
 }
 
@@ -68,15 +73,14 @@ impl Error for TestStepError {
 
 /// A CommandResponsePair represents a single round-trip of bytes sent between
 /// the client and the TPM.
-#[serde_as]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct CommandResponsePair {
     /// A descriptive name of the step to perform. This ends up in error
     /// messages.
     pub step: String,
-    /// The input bytes to send to the TPM.
-    #[serde_as(as = "Hex")]
-    pub input: Vec<u8>,
+    /// The input bytes to send to the TPM. This value supports the encoded
+    /// format described in TODO.
+    pub input: EncodedInput,
     /// The expected response bytes received from the TPM. This value supports
     /// the encoded format described in TODO.
     pub response: EncodedResponse,
@@ -87,14 +91,27 @@ impl CommandResponsePair {
     /// from this function indicate issues in the authoring of the
     /// CommandResponsePair.
     pub fn check(&self) -> Result<(), TestStepError> {
+        // Ensure encoded fields parse correctly.
+        let input = parse::input(&self.input).map_err(|e| {
+            TestStepError::new(&self.step, TestStepErrorKind::ParseInput(Box::new(e)))
+        })?;
+        let response = parse::response(&self.response).map_err(|e| {
+            TestStepError::new(&self.step, TestStepErrorKind::ParseResponse(Box::new(e)))
+        })?;
+
+        // Minimum size of an input is a command header with no params.
+        const MIN_INPUT_LEN: usize = 10;
+        // Minimum size of a response is a response header with no params.
+        const MIN_RESPONSE_LEN: usize = 10;
+
         // Ensure input/response are at least the minimum length
-        if self.input.len() < 10 {
+        if input.len() < MIN_INPUT_LEN {
             return Err(TestStepError::new(
                 &self.step,
                 TestStepErrorKind::InputTooShort,
             ));
         }
-        if self.response.len() < 10 {
+        if response.min_len() < MIN_RESPONSE_LEN {
             return Err(TestStepError::new(
                 &self.step,
                 TestStepErrorKind::ResponseTooShort,

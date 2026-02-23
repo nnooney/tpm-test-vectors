@@ -105,25 +105,6 @@ impl From<ParseError> for ResponseEvaluationError {
 #[derive(Clone, Debug, Default, PartialEq, Eq, Deserialize, Serialize)]
 pub struct EncodedResponse(String);
 
-impl EncodedResponse {
-    /// Returns the length of the encoded response string.
-    #[must_use]
-    pub fn len(&self) -> usize {
-        self.0.len() / 2
-    }
-
-    /// Returns true if the response is empty.
-    #[must_use]
-    pub fn is_empty(&self) -> bool {
-        self.len() == 0
-    }
-
-    /// Decodes the hex-encoded response into bytes.
-    pub fn to_bytes(&self) -> Result<Vec<u8>, hex::FromHexError> {
-        hex::decode(&self.0)
-    }
-}
-
 impl fmt::Display for EncodedResponse {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.0)
@@ -227,7 +208,7 @@ fn hex_string_to_u16(hex_string: &str) -> u16 {
     result
 }
 
-/// A ResponsePart represents a subsequence of the total response with specific
+/// A Part represents a subsequence of the total response with specific
 /// semantics for matching data against the TPM. It directly references the
 /// [`EncodedResponse`] it was parsed from.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -365,6 +346,13 @@ impl<'a> Response<'a> {
             min_len,
             parts,
         }
+    }
+
+    /// Returns the minimum length of TPM data needed for this response to
+    /// evaluate.
+    #[must_use]
+    pub fn min_len(&self) -> usize {
+        self.min_len
     }
 
     /// Check the response against actual `data` (formated as a hexadecimal

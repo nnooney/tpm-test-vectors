@@ -19,5 +19,18 @@ TpmTestVector(
       response: "80010000000a00000000",
     ),
     // TODO: Confirm values have default initialization.
+    // On any TPM2_Startup(),
+    // • phEnable shall be SET;
+    SendCommand(
+      step: "Ensure phEnable is SET",
+      input: "8001000000160000017a000000060000020100000001",
+      response: "80010000001b00000000**000000060000000100000201{0b********_********_********_*******1}",
+    )
   ]
 )
+
+// On any TPM2_Startup(),
+// • phEnable shall be SET;
+// • all transient contexts (objects, sessions, and sequences) shall be flushed from TPM memory;
+// • Time should not be reset unless the TPM requires a _TPM_Init indication before resuming operation.
+// • use of lockoutAuth shall be enabled if lockoutRecovery is zero.

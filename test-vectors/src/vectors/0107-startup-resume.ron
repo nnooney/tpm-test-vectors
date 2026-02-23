@@ -1,0 +1,18 @@
+// TPM Resume - This is a Startup(STATE) preceded by Shutdown(STATE). This
+// preserves the previous state of the TPM including the static Root of Trust
+// for Measurement (S-RTM) PCR and the platform controls other than the
+// phEnable.
+TpmTestVector(
+  name: "[TPM2_Startup] TPM Resume sequence",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "80010000000c000001440000",
+      response: "80010000000a00000000",
+    ),
+    // TODO: Confirm values have default initialization.
+  ]
+)

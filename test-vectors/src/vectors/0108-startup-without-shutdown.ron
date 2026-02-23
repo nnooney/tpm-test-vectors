@@ -1,0 +1,16 @@
+// If a TPM receives Startup(STATE) and that was not preceded by
+// Shutdown(STATE), the TPM shall return TPM_RC_VALUE.
+TpmTestVector(
+  name: "[TPM2_Startup] Startup STATE without Shutdown STATE",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "80010000000c000001440001",
+      // TPM_RC_1 | TPM_RC_P | TPM_RC_VALUE
+      response: "80010000000a000001c4",
+    ),
+  ]
+)

@@ -36,9 +36,10 @@ pub enum ResponseEvaluationError {
     /// Part extends beyond end of response (`want`, `got`)
     #[non_exhaustive]
     PartExtendsBeyondResponse(usize, usize),
-    /// Part mismatches actual data (`want`, `got`, `index`, `matched`)
+    /// Part mismatches actual data (`want`, `got`, `index`, `chars_per_byte`,
+    /// `matched`)
     #[non_exhaustive]
-    PartMismatch(String, String, usize, usize),
+    PartMismatch(String, String, usize, usize, usize),
 }
 
 impl fmt::Display for ResponseEvaluationError {
@@ -66,18 +67,24 @@ TPM response part extends beyond end of response
   want: >= {want}
    got: {got}"#
             ),
-            Self::PartMismatch(ref want, ref got, ref index, ref matched) => {
+            Self::PartMismatch(ref want, ref got, ref index, ref chars_per_byte, ref matched) => {
                 let prelude = if *matched == 0 { "" } else { "..." };
+                let prelude_match = if *matched == 0 {
+                    ""
+                } else {
+                    &format!("^^^ omitted {matched} matched bytes")
+                };
                 let pad = ' ';
                 let width = *index + prelude.len();
-                let nibble = index + matched;
+                let total = index / chars_per_byte + 1 + matched;
                 write!(
                     f,
                     r#"
 TPM response part mismatch
   want: {prelude}{want}
    got: {prelude}{got}
-        {pad:width$}^ mismatch begins at index {nibble}"#,
+        {pad:width$}^ mismatch begins in byte {total}
+        {prelude_match}"#,
                 )
             }
         }
@@ -132,7 +139,7 @@ impl From<String> for EncodedResponse {
 /// Internal struct to keep track of how much of an actual response is checked.
 /// It deirectly references the actual TPM response it was constructed from.
 struct PartialMatch<'a> {
-    /// Number of hex characters (nibbles) matched so far.
+    /// Number of bytes in the actual response matched so far.
     matched: usize,
     /// The remaining string to match.
     remaining: &'a str,
@@ -242,19 +249,20 @@ impl<'a> Part<'a> {
 
                 let expected_chars = expected.chars().filter(|&c| c != SPACE);
 
-                for (i, (want, got)) in expected_chars.zip(data_part.chars()).enumerate() {
+                for (i, (want, got)) in expected_chars.clone().zip(data_part.chars()).enumerate() {
                     if want != WILDCARD && !want.eq_ignore_ascii_case(&got) {
                         return Err(ResponseEvaluationError::PartMismatch(
-                            expected.to_string(),
+                            expected_chars.collect::<String>(),
                             data_part.to_string(),
                             i,
+                            2, // chars_per_byte
                             data.matched,
                         ));
                     }
                 }
 
                 Ok(PartialMatch {
-                    matched: data.matched + num_hex_chars,
+                    matched: data.matched + num_hex_chars / 2,
                     remaining: data_rest,
                 })
             }
@@ -266,20 +274,21 @@ impl<'a> Part<'a> {
 
                 let expected_chars = expected.chars().filter(|&c| c != SPACE);
 
-                for (i, (want, got)) in expected_chars.zip(binary_part.chars()).enumerate() {
+                for (i, (want, got)) in expected_chars.clone().zip(binary_part.chars()).enumerate()
+                {
                     if want != WILDCARD && want != got {
-                        let nibble_index = i / 4;
                         return Err(ResponseEvaluationError::PartMismatch(
-                            expected.to_string(),
-                            data_part.to_string(),
-                            nibble_index,
+                            expected_chars.collect::<String>(),
+                            binary_part,
+                            i,
+                            8, // chars_per_byte
                             data.matched,
                         ));
                     }
                 }
 
                 Ok(PartialMatch {
-                    matched: data.matched + num_hex_chars,
+                    matched: data.matched + num_hex_chars / 2,
                     remaining: data_rest,
                 })
             }
@@ -306,7 +315,7 @@ impl<'a> Part<'a> {
                     data.remaining.split_at(U16_HEX_CHARS + num_hex_chars);
 
                 Ok(PartialMatch {
-                    matched: data.matched + U16_HEX_CHARS + num_hex_chars,
+                    matched: data.matched + (U16_HEX_CHARS + num_hex_chars) / 2,
                     remaining: data_rest,
                 })
             }

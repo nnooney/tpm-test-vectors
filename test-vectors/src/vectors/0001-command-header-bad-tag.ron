@@ -10,13 +10,13 @@ TpmTestVector(
       step: "Issue command header with invalid tag",
       // TPMI_ST_COMMAND_TAG = 0123, invalid value
       input: "0123_0000000a_00000000",
-      response: "80010000000a0000001e",
+      response: "8001_0000000a_0000001e",
     ),
     SendCommand(
       step: "Issue command header with valid but incorrect tag",
       // TPMI_ST_COMMAND_TAG = 8000, TPM_ST_NULL
       input: "8000_0000000a_00000000",
-      response: "80010000000a0000001e",
+      response: "8001_0000000a_0000001e",
     ),
   ]
 )

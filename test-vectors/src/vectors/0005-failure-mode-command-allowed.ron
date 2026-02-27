@@ -12,8 +12,9 @@ TpmTestVector(
     SendCommand(
       step: "TPM2_GetTestResult allowed in failure mode",
       // Command = TPM2_GetTestResult
-      input: "80010000000a0000017c",
-      response: "8001********00000000",
+      input: "8001_0000000a_0000017c",
+      // Only check for TPM_RC_SUCCESS, ignore extra response data.
+      response: "8001_********_00000000",
     ),
     //  While in Failure mode, the TPM is only required to provide a limited
     //  number of property values. They are all in the set of TPM properties
@@ -29,8 +30,9 @@ TpmTestVector(
     SendCommand(
       step: "TPM2_GetCapability allowed in failure mode",
       // Command = TPM2_GetCapability, request all properties above.
-      input: "8001000000160000017a000000060000010500000008",
-      response: "8001********00000000",
+      input: "8001_00000016_0000017a_00000006_00000105_00000008",
+      // Only check for TPM_RC_SUCCESS, ignore extra response data.
+      response: "8001_********_00000000",
     ),
   ]
 )

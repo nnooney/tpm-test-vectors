@@ -11,14 +11,14 @@ TpmTestVector(
     SendCommand(
       step: "Issue command header with invalid size",
       // Command size = 01234567, nonsensical
-      input: "80010123456700000000",
-      response: "80010000000a00000142",
+      input: "8001_01234567_00000000",
+      response: "8001_0000000a_00000142",
     ),
     SendCommand(
       step: "Issue command header with valid but incorrect size",
       // Command size = 0
-      input: "80010000000000000000",
-      response: "80010000000a00000142",
+      input: "8001_00000000_00000000",
+      response: "8001_0000000a_00000142",
     ),
   ]
 )

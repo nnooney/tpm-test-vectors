@@ -11,8 +11,8 @@ TpmTestVector(
     SendCommand(
       step: "TPM2_Startup not allowed in failure mode",
       // Command = TPM2_Startup
-      input: "80010000000c000001440000",
-      response: "80010000000a00000101",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000101",
     ),
   ]
 )

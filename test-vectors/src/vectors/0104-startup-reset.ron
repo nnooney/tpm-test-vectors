@@ -15,16 +15,16 @@ TpmTestVector(
   test_sequence: [
     SendCommand(
       step: "Issue TPM Startup Command",
-      input: "80010000000c000001440000",
-      response: "80010000000a00000000",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
     ),
     // TODO: Confirm values have default initialization.
     // On any TPM2_Startup(),
     // • phEnable shall be SET;
     SendCommand(
       step: "Ensure phEnable is SET",
-      input: "8001000000160000017a000000060000020100000001",
-      response: "80010000001b00000000**000000060000000100000201{0b********_********_********_*******1}",
+      input: "8001_00000016_0000017a_00000006_00000201_00000001",
+      response: "8001_0000001b_00000000_**_00000006_00000001_00000201_{0b********_********_********_*******1}",
     )
   ]
 )

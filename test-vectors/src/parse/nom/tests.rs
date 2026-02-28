@@ -130,6 +130,10 @@ fn test_parse_expansion_control_sequence() {
         Ok(("", Part::TPM2B))
     );
     assert_eq!(
+        parse_expansion_control_sequence("{TPM2B}_"),
+        Ok(("", Part::TPM2B))
+    );
+    assert_eq!(
         parse_expansion_control_sequence("{0b00000101}"),
         Ok(("", Part::Binary("00000101", 8)))
     );
@@ -197,9 +201,9 @@ fn test_parse_encoded_response() {
         Ok(vec![Part::Hex("01_23", 4), Part::Binary("0000_0001", 8)])
     );
     assert_eq!(
-        parse_encoded_response("01{TPM2B}{0b00000001}23"),
+        parse_encoded_response("01_{TPM2B}_{0b00000001}_23"),
         Ok(vec![
-            Part::Hex("01", 2),
+            Part::Hex("01_", 2),
             Part::TPM2B,
             Part::Binary("00000001", 8),
             Part::Hex("23", 2)

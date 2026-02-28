@@ -90,10 +90,13 @@ fn parse_tpm2b_part(input: &str) -> IResult<&str, Part<'_>> {
 
 /// Parses expansion control sequences.
 fn parse_expansion_control_sequence(input: &str) -> IResult<&str, Part<'_>> {
-    delimited(
-        char(EXPANSION_START),
-        alt((parse_tpm2b_part, parse_binary_part)),
-        char(EXPANSION_END),
+    terminated(
+        delimited(
+            char(EXPANSION_START),
+            alt((parse_tpm2b_part, parse_binary_part)),
+            char(EXPANSION_END),
+        ),
+        many0(char(SPACE)),
     )
     .parse(input)
 }

@@ -1,36 +1,38 @@
 //! The parse module provides routines for parsing input data. It makes use of
 //! two crates:
 //!
-//!   1. ron, for parsing test vectors and components within
-//!   2. nom, for parsing encoded responses
+//!   1. ron, for parsing test vectors and components within.
+//!   2. nom, for parsing encoded fields.
 use crate::input::{EncodedInput, Input};
-use crate::parse::input::parse_encoded_input;
-use crate::parse::response::parse_encoded_response;
 use crate::response::{EncodedResponse, Response};
 use crate::{CommandResponsePair, TpmTestVector};
 
 use core::fmt;
-use ron::{Options, error::SpannedError, extensions::Extensions};
 
-mod input;
-mod response;
+mod nom;
+mod ron;
 
-/// Returns the configured ron parser with extensions enabled.
-fn ron() -> Options {
-    Options::default().with_default_extension(
-        Extensions::IMPLICIT_SOME
-            | Extensions::UNWRAP_NEWTYPES
-            | Extensions::UNWRAP_VARIANT_NEWTYPES,
-    )
-}
+/// Character that represents spaces in numeric sequences, used for making long
+/// sequences more readable.
+pub const SPACE: char = '_';
+
+/// Character that represents a wildcard value, which will automatically match
+/// the corresponding element of the response.
+pub const WILDCARD: char = '*';
+
+/// Character that represents the opening of an expansion control sequence.
+pub const EXPANSION_START: char = '{';
+
+/// Character that represents the closing of an expansion control sequence.
+pub const EXPANSION_END: char = '}';
 
 /// Types of errors that can occur from parsing inputs.
 #[derive(Debug)]
 pub enum ParseError {
     #[non_exhaustive]
-    Ron(SpannedError),
+    Ron(ron::ParseError),
     #[non_exhaustive]
-    Nom(nom::Err<nom::error::Error<String>>),
+    Nom(nom::ParseError),
 }
 
 impl fmt::Display for ParseError {
@@ -51,44 +53,39 @@ impl core::error::Error for ParseError {
     }
 }
 
-impl From<SpannedError> for ParseError {
-    fn from(err: SpannedError) -> Self {
+impl From<ron::ParseError> for ParseError {
+    fn from(err: ron::ParseError) -> Self {
         Self::Ron(err)
     }
 }
 
-impl From<nom::Err<nom::error::Error<String>>> for ParseError {
-    fn from(err: nom::Err<nom::error::Error<String>>) -> Self {
+impl From<nom::ParseError> for ParseError {
+    fn from(err: nom::ParseError) -> Self {
         Self::Nom(err)
     }
 }
 
-impl<'a> From<nom::Err<nom::error::Error<&'a str>>> for ParseError {
-    fn from(err: nom::Err<nom::error::Error<&'a str>>) -> Self {
-        Self::Nom(err.map(|e| nom::error::Error::new(e.input.to_string(), e.code)))
-    }
-}
-
-/// Parses a TpmTestVector
+/// Parses a [`TpmTestVector`].
 pub fn tpm_test_vector(input: &str) -> Result<TpmTestVector, ParseError> {
-    let test_vector: TpmTestVector = ron().from_str(input)?;
+    let test_vector: TpmTestVector = ron::parser().from_str(input)?;
     Ok(test_vector)
 }
 
-/// Parses a CommandResponsePair
+/// Parses a [`CommandResponsePair`].
 pub fn command_response_pair(input: &str) -> Result<CommandResponsePair, ParseError> {
-    let command: CommandResponsePair = ron().from_str(input)?;
+    let command: CommandResponsePair = ron::parser().from_str(input)?;
     Ok(command)
 }
 
-/// Parses an Input
+/// Parses an [`Input`] from the [`EncodedInput`] of a [`CommandResponsePair`].
 pub fn input(input: &EncodedInput) -> Result<Input<'_>, ParseError> {
-    let data = parse_encoded_input(input.as_ref())?;
+    let data = nom::parse_encoded_input(input.as_ref())?;
     Ok(Input::new(input, data))
 }
 
-/// Parses a Response
+/// Parses a [`Response`] from the [`EncodedResponse`] of a
+/// [`CommandResponsePair`].
 pub fn response(input: &EncodedResponse) -> Result<Response<'_>, ParseError> {
-    let parts = parse_encoded_response(input.as_ref())?;
+    let parts = nom::parse_encoded_response(input.as_ref())?;
     Ok(Response::new(input, parts))
 }

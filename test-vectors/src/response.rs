@@ -5,21 +5,7 @@ use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
-use crate::parse::{self, ParseError};
-
-/// Character that represents a wildcard value, which will automatically match
-/// the corresponding element of the response.
-pub const WILDCARD: char = '*';
-
-/// Character that represents spacing in hex and binary formats, used for making
-/// long sequences more readable.
-pub const SPACE: char = '_';
-
-/// Character that represents the opening of an expansion control sequence.
-pub const EXPANSION_START: char = '{';
-
-/// Character that represents the closing of an expansion control sequence.
-pub const EXPANSION_END: char = '}';
+use crate::parse::{self, ParseError, SPACE, WILDCARD};
 
 /// Errors returned from evaluating a response.
 #[derive(Debug)]

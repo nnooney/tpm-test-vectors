@@ -4,11 +4,7 @@ use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
-use crate::parse::{self, ParseError};
-
-/// Character that represents spacing in hex format, used for making long
-/// sequences more readable.
-pub const SPACE: char = '_';
+use crate::parse::{self, ParseError, SPACE};
 
 /// Errors returned from evaluating an input.
 #[derive(Debug)]

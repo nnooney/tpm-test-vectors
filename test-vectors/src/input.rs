@@ -4,7 +4,8 @@ use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
-use crate::parse::{self, ParseError, SPACE};
+use crate::parse::consts::*;
+use crate::parse::{self, ParseError};
 
 /// Errors returned from evaluating an input.
 #[derive(Debug)]

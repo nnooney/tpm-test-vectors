@@ -9,22 +9,9 @@ use crate::{CommandResponsePair, TpmTestVector};
 
 use core::fmt;
 
+pub mod consts;
 mod nom;
 mod ron;
-
-/// Character that represents spaces in numeric sequences, used for making long
-/// sequences more readable.
-pub const SPACE: char = '_';
-
-/// Character that represents a wildcard value, which will automatically match
-/// the corresponding element of the response.
-pub const WILDCARD: char = '*';
-
-/// Character that represents the opening of an expansion control sequence.
-pub const EXPANSION_START: char = '{';
-
-/// Character that represents the closing of an expansion control sequence.
-pub const EXPANSION_END: char = '}';
 
 /// Types of errors that can occur from parsing inputs.
 #[derive(Debug)]

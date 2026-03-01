@@ -1,5 +1,5 @@
 use super::*;
-use crate::response::Part;
+use crate::response::{CompareType, Part};
 
 #[test]
 fn test_parse_hex() {
@@ -88,6 +88,21 @@ fn test_parse_binary_with_wildcards() {
 }
 
 #[test]
+fn test_parse_logical_operator() {
+    assert_eq!(parse_logical_operator("!"), Ok(("", "!")));
+    assert_eq!(parse_logical_operator("<"), Ok(("", "<")));
+    assert_eq!(parse_logical_operator("<="), Ok(("", "<=")));
+    assert_eq!(parse_logical_operator(">"), Ok(("", ">")));
+    assert_eq!(parse_logical_operator(">="), Ok(("", ">=")));
+    assert!(parse_logical_operator("").is_err());
+    assert!(parse_logical_operator("ABC123").is_err());
+    assert!(parse_logical_operator("_").is_err());
+    assert!(parse_logical_operator("*").is_err());
+    assert!(parse_logical_operator("{").is_err());
+    assert!(parse_logical_operator("}").is_err());
+}
+
+#[test]
 fn test_parse_binary_part() {
     assert_eq!(
         parse_binary_part("0b00000101"),
@@ -124,6 +139,41 @@ fn test_parse_tpm2b_part() {
 }
 
 #[test]
+fn test_parse_compare_part() {
+    assert_eq!(
+        parse_compare_part("!01"),
+        Ok(("", Part::Compare(CompareType::Not, "01", 2)))
+    );
+    assert_eq!(
+        parse_compare_part("<01"),
+        Ok(("", Part::Compare(CompareType::LessThan, "01", 2)))
+    );
+    assert_eq!(
+        parse_compare_part("<=01"),
+        Ok(("", Part::Compare(CompareType::LessThanOrEqual, "01", 2)))
+    );
+    assert_eq!(
+        parse_compare_part(">01"),
+        Ok(("", Part::Compare(CompareType::GreaterThan, "01", 2)))
+    );
+    assert_eq!(
+        parse_compare_part(">=01"),
+        Ok(("", Part::Compare(CompareType::GreaterThanOrEqual, "01", 2)))
+    );
+    assert!(parse_compare_part("").is_err());
+    assert!(parse_compare_part("ABC123").is_err());
+    assert!(parse_compare_part("_").is_err());
+    assert!(parse_compare_part("*").is_err());
+    assert!(parse_compare_part("{").is_err());
+    assert!(parse_compare_part("}").is_err());
+    assert!(parse_compare_part("!012").is_err());
+    assert!(parse_compare_part("<012").is_err());
+    assert!(parse_compare_part("<=012").is_err());
+    assert!(parse_compare_part(">012").is_err());
+    assert!(parse_compare_part(">=012").is_err());
+}
+
+#[test]
 fn test_parse_expansion_control_sequence() {
     assert_eq!(
         parse_expansion_control_sequence("{TPM2B}"),
@@ -141,12 +191,38 @@ fn test_parse_expansion_control_sequence() {
         parse_expansion_control_sequence("{0B********}"),
         Ok(("", Part::Binary("********", 8)))
     );
+    assert_eq!(
+        parse_expansion_control_sequence("{!01}"),
+        Ok(("", Part::Compare(CompareType::Not, "01", 2)))
+    );
+    assert_eq!(
+        parse_expansion_control_sequence("{<01}"),
+        Ok(("", Part::Compare(CompareType::LessThan, "01", 2)))
+    );
+    assert_eq!(
+        parse_expansion_control_sequence("{<=01}"),
+        Ok(("", Part::Compare(CompareType::LessThanOrEqual, "01", 2)))
+    );
+    assert_eq!(
+        parse_expansion_control_sequence("{>01}"),
+        Ok(("", Part::Compare(CompareType::GreaterThan, "01", 2)))
+    );
+    assert_eq!(
+        parse_expansion_control_sequence("{>=01}"),
+        Ok(("", Part::Compare(CompareType::GreaterThanOrEqual, "01", 2)))
+    );
     assert!(parse_expansion_control_sequence("{TPM2B").is_err());
     assert!(parse_expansion_control_sequence("TPM2B}").is_err());
+    assert!(parse_expansion_control_sequence("{tpm2b}").is_err());
     assert!(parse_expansion_control_sequence("{0b}").is_err());
+    assert!(parse_expansion_control_sequence("{0B}").is_err());
+    assert!(parse_expansion_control_sequence("{!}").is_err());
+    assert!(parse_expansion_control_sequence("{<}").is_err());
+    assert!(parse_expansion_control_sequence("{<=}").is_err());
+    assert!(parse_expansion_control_sequence("{>}").is_err());
+    assert!(parse_expansion_control_sequence("{>=}").is_err());
     assert!(parse_expansion_control_sequence("{}").is_err());
     assert!(parse_expansion_control_sequence("{invalid}").is_err());
-    assert!(parse_expansion_control_sequence("{tpm2b}").is_err());
 }
 
 #[test]

@@ -41,10 +41,12 @@ TpmTestVector(
     ),
     // • Time should not be reset unless the TPM requires a _TPM_Init indication
     // before resuming operation.
-    //
-    // TODO: Support asserting that time is less than a value, e.g. 1 minute.
-    // This requires support for capturing values.
-    //
+    SendCommand(
+      step: "Ensure time was reset",
+      input: "8001_0000000a_00000181",
+      // Check less than 2 minutes (120000 ms)
+      response: "8001_00000023_00000000_{<000000000001D4C0}_****************_********_********_**"
+    )
     // • use of lockoutAuth shall be enabled if lockoutRecovery is zero.
     //
     // TODO: The only way to check that using lockoutAuth is possible is to use

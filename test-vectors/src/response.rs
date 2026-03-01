@@ -5,7 +5,8 @@ use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
 
-use crate::parse::{self, ParseError, SPACE, WILDCARD};
+use crate::parse::consts::*;
+use crate::parse::{self, ParseError};
 
 /// Errors returned from evaluating a response.
 #[derive(Debug)]
@@ -26,6 +27,9 @@ pub enum ResponseEvaluationError {
     /// `matched`)
     #[non_exhaustive]
     PartMismatch(String, String, usize, usize, usize),
+    /// Part compare failure (`want`, `got`, `matched`)
+    #[non_exhaustive]
+    PartCompareFailure(String, String, usize),
 }
 
 impl fmt::Display for ResponseEvaluationError {
@@ -71,6 +75,17 @@ TPM response part mismatch
    got: {prelude}{got}
         {pad:width$}^ mismatch begins in byte {total}
         {prelude_match}"#,
+                )
+            }
+            Self::PartCompareFailure(ref want, ref got, ref matched) => {
+                let prelude = if *matched == 0 { "" } else { "..." };
+                write!(
+                    f,
+                    r#"
+TPM response part compare failure
+  want: {prelude}{want}
+   got: {prelude}{got}
+"#
                 )
             }
         }
@@ -201,6 +216,28 @@ fn hex_string_to_u16(hex_string: &str) -> u16 {
     result
 }
 
+/// A type of comparison to perform.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum CompareType {
+    Not,
+    LessThan,
+    LessThanOrEqual,
+    GreaterThan,
+    GreaterThanOrEqual,
+}
+
+impl fmt::Display for CompareType {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Not => write!(f, "{NOT}"),
+            Self::LessThan => write!(f, "{LESS_THAN}"),
+            Self::LessThanOrEqual => write!(f, "{LESS_THAN_OR_EQUAL}"),
+            Self::GreaterThan => write!(f, "{GREATER_THAN}"),
+            Self::GreaterThanOrEqual => write!(f, "{GREATER_THAN_OR_EQUAL}"),
+        }
+    }
+}
+
 /// A Part represents a subsequence of the total response with specific
 /// semantics for matching data against the TPM. It directly references the
 /// [`EncodedResponse`] it was parsed from.
@@ -212,9 +249,36 @@ pub enum Part<'a> {
     Binary(&'a str, usize),
     /// A TPM2B in the response (big-endian u16 length followed by length bytes)
     TPM2B,
+    /// Compare against a known hexadecimal value
+    Compare(CompareType, &'a str, usize),
 }
 
 impl<'a> Part<'a> {
+    /// Helper constructor for making a Not Compare part.
+    pub fn not(expected: &'a str, count: usize) -> Self {
+        Self::Compare(CompareType::Not, expected, count)
+    }
+
+    /// Helper constructor for making a Less Than Compare part.
+    pub fn lt(expected: &'a str, count: usize) -> Self {
+        Self::Compare(CompareType::LessThan, expected, count)
+    }
+
+    /// Helper constructor for making a Less Than Or Equal Compare part.
+    pub fn le(expected: &'a str, count: usize) -> Self {
+        Self::Compare(CompareType::LessThanOrEqual, expected, count)
+    }
+
+    /// Helper constructor for making a Greater Than Compare part.
+    pub fn gt(expected: &'a str, count: usize) -> Self {
+        Self::Compare(CompareType::GreaterThan, expected, count)
+    }
+
+    /// Helper constructor for making a Greater Than Or Equal Compare part.
+    pub fn ge(expected: &'a str, count: usize) -> Self {
+        Self::Compare(CompareType::GreaterThanOrEqual, expected, count)
+    }
+
     /// Returns the minimum length required in the response to match the part.
     #[must_use]
     pub fn min_len(&self) -> usize {
@@ -222,6 +286,7 @@ impl<'a> Part<'a> {
             Self::Hex(_, count) => count / 2,
             Self::Binary(_, count) => count / 8,
             Self::TPM2B => 2, // must encode at least a u16 size
+            Self::Compare(_, _, count) => count / 2,
         }
     }
 
@@ -238,7 +303,7 @@ impl<'a> Part<'a> {
                 for (i, (want, got)) in expected_chars.clone().zip(data_part.chars()).enumerate() {
                     if want != WILDCARD && !want.eq_ignore_ascii_case(&got) {
                         return Err(ResponseEvaluationError::PartMismatch(
-                            expected_chars.collect::<String>(),
+                            expected.replace(SPACE, ""),
                             data_part.to_string(),
                             i,
                             2, // chars_per_byte
@@ -260,11 +325,10 @@ impl<'a> Part<'a> {
 
                 let expected_chars = expected.chars().filter(|&c| c != SPACE);
 
-                for (i, (want, got)) in expected_chars.clone().zip(binary_part.chars()).enumerate()
-                {
+                for (i, (want, got)) in expected_chars.zip(binary_part.chars()).enumerate() {
                     if want != WILDCARD && want != got {
                         return Err(ResponseEvaluationError::PartMismatch(
-                            expected_chars.collect::<String>(),
+                            expected.replace(SPACE, ""),
                             binary_part,
                             i,
                             8, // chars_per_byte
@@ -305,6 +369,37 @@ impl<'a> Part<'a> {
                     remaining: data_rest,
                 })
             }
+            Self::Compare(compare_type, expected, count) => {
+                let num_hex_chars = *count;
+                let (data_part, data_rest) = split_data_part(&data, num_hex_chars)?;
+
+                let expected_chars = expected
+                    .chars()
+                    .filter(|&c| c != SPACE)
+                    .map(|c| c.to_ascii_lowercase());
+                let data_iter = data_part.chars().map(|c| c.to_ascii_lowercase());
+
+                let matched = match compare_type {
+                    CompareType::Not => data_iter.ne(expected_chars),
+                    CompareType::LessThan => data_iter.lt(expected_chars),
+                    CompareType::LessThanOrEqual => data_iter.le(expected_chars),
+                    CompareType::GreaterThan => data_iter.gt(expected_chars),
+                    CompareType::GreaterThanOrEqual => data_iter.ge(expected_chars),
+                };
+
+                if !matched {
+                    return Err(ResponseEvaluationError::PartCompareFailure(
+                        expected.replace(SPACE, ""),
+                        data_part.to_string(),
+                        data.matched,
+                    ));
+                }
+
+                Ok(PartialMatch {
+                    matched: data.matched + num_hex_chars / 2,
+                    remaining: data_rest,
+                })
+            }
         }
     }
 }
@@ -315,6 +410,7 @@ impl<'a> fmt::Display for Part<'a> {
             Self::Hex(s, c) => write!(f, "Part \"{s}\": {c} bytes to match"),
             Self::Binary(s, c) => write!(f, "Part \"{s}\": {c} bytes to match"),
             Self::TPM2B => write!(f, "TPM2B"),
+            Self::Compare(t, s, c) => write!(f, "Compare {t} \"{s}\": {c} bytes to match"),
         }
     }
 }

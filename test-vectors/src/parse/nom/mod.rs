@@ -3,7 +3,7 @@
 #[cfg(test)]
 mod tests;
 
-use crate::parse::{EXPANSION_END, EXPANSION_START, SPACE, WILDCARD};
+use crate::parse::consts::*;
 use crate::response::Part;
 use const_format::concatcp;
 use nom::branch::alt;
@@ -49,6 +49,20 @@ fn parse_binary_with_wildcards(input: &str) -> IResult<&str, &str> {
     .parse(input)
 }
 
+/// Parses a logical operator from `input`.
+fn parse_logical_operator(input: &str) -> IResult<&str, &str> {
+    // Tag order matters here. alt iterates sequentially through the tags, so we
+    // need to check for the *_OR_EQUAL variants first.
+    alt((
+        tag(NOT),
+        tag(LESS_THAN_OR_EQUAL),
+        tag(LESS_THAN),
+        tag(GREATER_THAN_OR_EQUAL),
+        tag(GREATER_THAN),
+    ))
+    .parse(input)
+}
+
 /// Custom parser for numeric literals (hex and binary) which accepts an input
 /// `parser`, ensures it parses a `multiple_of` characters excluding [`SPACE`],
 /// and maps to the resulting [`Part`] using `part_ctor`.
@@ -85,7 +99,30 @@ fn parse_hex_part(input: &str) -> IResult<&str, Part<'_>> {
 /// of a TPM2B in the response, which is a big-endian u16 length followed by
 /// that many bytes.
 fn parse_tpm2b_part(input: &str) -> IResult<&str, Part<'_>> {
-    map(tag("TPM2B"), |_| Part::TPM2B).parse(input)
+    map(tag(TPM2B), |_| Part::TPM2B).parse(input)
+}
+
+/// Parses a compare part from an encoded response.
+fn parse_compare_part(input: &str) -> IResult<&str, Part<'_>> {
+    // shorthand func for parsing the "body" of the comparison
+    fn parse_compare_body<'a, F: Fn(&'a str, usize) -> Part<'a> + Clone>(
+        part_ctor: F,
+        input: &'a str,
+    ) -> IResult<&'a str, Part<'a>> {
+        parse_numeric_part(parse_hex, 2, part_ctor).parse(input)
+    }
+
+    match parse_logical_operator(input) {
+        Ok((remaining, operator)) => match operator {
+            NOT => parse_compare_body(Part::not, remaining),
+            LESS_THAN => parse_compare_body(Part::lt, remaining),
+            LESS_THAN_OR_EQUAL => parse_compare_body(Part::le, remaining),
+            GREATER_THAN => parse_compare_body(Part::gt, remaining),
+            GREATER_THAN_OR_EQUAL => parse_compare_body(Part::ge, remaining),
+            _ => Err(nom::Err::Error(Error::new(input, ErrorKind::Verify))),
+        },
+        Err(e) => Err(e),
+    }
 }
 
 /// Parses expansion control sequences.
@@ -93,7 +130,7 @@ fn parse_expansion_control_sequence(input: &str) -> IResult<&str, Part<'_>> {
     terminated(
         delimited(
             char(EXPANSION_START),
-            alt((parse_tpm2b_part, parse_binary_part)),
+            alt((parse_tpm2b_part, parse_binary_part, parse_compare_part)),
             char(EXPANSION_END),
         ),
         many0(char(SPACE)),

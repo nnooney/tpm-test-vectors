@@ -12,6 +12,12 @@ pub const EXPANSION_START: char = '{';
 /// Character that represents the closing of an expansion control sequence.
 pub const EXPANSION_END: char = '}';
 
+/// Character that represents the opening of a capture control sequence.
+pub const CAPTURE_START: char = '(';
+
+/// Character that represents the closing of a capture control sequence.
+pub const CAPTURE_END: char = ')';
+
 /// Tag representing a TPM2B.
 pub const TPM2B: &str = "TPM2B";
 

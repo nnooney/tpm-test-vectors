@@ -1,6 +1,9 @@
 //! The harness module provides type definitions and default implementations for
 //! running the test vectors.
 
+pub mod store;
+pub use store::*;
+
 use core::error::Error;
 use core::fmt;
 
@@ -16,6 +19,8 @@ pub enum HarnessErrorKind {
     #[non_exhaustive]
     LocalityUnsupported,
     #[non_exhaustive]
+    StoreUnsupported,
+    #[non_exhaustive]
     Io(std::io::Error), // Used by TcpConnection
 }
 
@@ -25,6 +30,7 @@ impl fmt::Display for HarnessErrorKind {
             Self::TransactUnsupported => write!(f, "transact fn unsupported"),
             Self::FailureModeUnsupported => write!(f, "failure mode fn unsupported"),
             Self::LocalityUnsupported => write!(f, "locality fn unsupported"),
+            Self::StoreUnsupported => write!(f, "store fn unsupported"),
             Self::Io(ref _err) => write!(f, "I/O error"),
         }
     }
@@ -96,5 +102,10 @@ pub trait Harness {
     /// Set the locality for subsequent commands.
     fn set_locality(&mut self, _locality: u8) -> Result<(), HarnessError> {
         Err(HarnessError::new(HarnessErrorKind::LocalityUnsupported))
+    }
+
+    /// Provides mutable access to the test's value store.
+    fn store_mut(&mut self) -> Result<&mut store::Store, HarnessError> {
+        Err(HarnessError::new(HarnessErrorKind::StoreUnsupported))
     }
 }

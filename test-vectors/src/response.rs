@@ -1,12 +1,13 @@
 //! A response is an encoded string describing the expected response from a
 //! TPM command.
 
+use crate::harness::store::Store;
+use crate::parse::consts::*;
+use crate::parse::{self, ParseError};
+
 use core::error::Error;
 use core::fmt;
 use serde::{Deserialize, Serialize};
-
-use crate::parse::consts::*;
-use crate::parse::{self, ParseError};
 
 /// Errors returned from evaluating a response.
 #[derive(Debug)]
@@ -251,6 +252,8 @@ pub enum Part<'a> {
     TPM2B,
     /// Compare against a known hexadecimal value
     Compare(CompareType, &'a str, usize),
+    /// Capture a value from the response into the store.
+    Capture(&'a str, u32),
 }
 
 impl<'a> Part<'a> {
@@ -287,12 +290,17 @@ impl<'a> Part<'a> {
             Self::Binary(_, count) => count / 8,
             Self::TPM2B => 2, // must encode at least a u16 size
             Self::Compare(_, _, count) => count / 2,
+            Self::Capture(_, length) => *length as usize,
         }
     }
 
     /// Checks the part against actual `data` (formated as a hexadecimal
     /// string)
-    fn check(&self, data: PartialMatch<'a>) -> Result<PartialMatch<'a>, ResponseEvaluationError> {
+    fn check(
+        &self,
+        data: PartialMatch<'a>,
+        store: &mut Store,
+    ) -> Result<PartialMatch<'a>, ResponseEvaluationError> {
         match self {
             Self::Hex(expected, count) => {
                 let num_hex_chars = *count;
@@ -400,6 +408,15 @@ impl<'a> Part<'a> {
                     remaining: data_rest,
                 })
             }
+            Self::Capture(name, length) => {
+                let num_hex_chars = *length as usize * 2;
+                let (data_part, data_rest) = split_data_part(&data, num_hex_chars)?;
+                store.insert(*name, data_part.to_string());
+                Ok(PartialMatch {
+                    matched: data.matched + num_hex_chars / 2,
+                    remaining: data_rest,
+                })
+            }
         }
     }
 }
@@ -411,6 +428,7 @@ impl<'a> fmt::Display for Part<'a> {
             Self::Binary(s, c) => write!(f, "Part \"{s}\": {c} bytes to match"),
             Self::TPM2B => write!(f, "TPM2B"),
             Self::Compare(t, s, c) => write!(f, "Compare {t} \"{s}\": {c} bytes to match"),
+            Self::Capture(n, l) => write!(f, "Capture \"{n}\": {l} bytes to capture"),
         }
     }
 }
@@ -448,7 +466,7 @@ impl<'a> Response<'a> {
 
     /// Check the response against actual `data` (formated as a hexadecimal
     /// string) returned from the TPM.
-    pub fn check(&self, data: &str) -> Result<(), ResponseEvaluationError> {
+    pub fn check(&self, data: &str, store: &mut Store) -> Result<(), ResponseEvaluationError> {
         if data.len() < self.min_len {
             return Err(ResponseEvaluationError::ResponseTooShort(
                 self.min_len,
@@ -461,15 +479,19 @@ impl<'a> Response<'a> {
             remaining: data,
         };
         for part in &self.parts {
-            data = part.check(data)?;
+            data = part.check(data, store)?;
         }
 
         Ok(())
     }
 
     /// Convenience function to construct a Response and evaluate it.
-    pub fn evaluate(encoded: &EncodedResponse, data: &[u8]) -> Result<(), ResponseEvaluationError> {
+    pub fn evaluate(
+        encoded: &EncodedResponse,
+        data: &[u8],
+        store: &mut Store,
+    ) -> Result<(), ResponseEvaluationError> {
         let response = parse::response(encoded)?;
-        response.check(&hex::encode(data))
+        response.check(&hex::encode(data), store)
     }
 }

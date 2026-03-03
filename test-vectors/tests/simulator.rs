@@ -1,7 +1,7 @@
 use rstest::rstest;
 use tempfile::tempdir;
 use tpm2_rs_client::connection::{Connection, TcpSimulator};
-use tpm2_test_vectors::{Harness, HarnessError};
+use tpm2_test_vectors::{Harness, HarnessError, store::Store};
 
 mod common;
 
@@ -63,6 +63,7 @@ fn get_simulator_args() -> Vec<String> {
 /// with the TPM simulator.
 pub struct TpmSimulatorHarness {
     simulator: TcpSimulator,
+    store: Store,
 }
 
 impl TpmSimulatorHarness {
@@ -75,7 +76,9 @@ impl TpmSimulatorHarness {
             &get_simulator_ip(),
         )?;
 
-        Ok(TpmSimulatorHarness { simulator })
+        let store = Store::new();
+
+        Ok(TpmSimulatorHarness { simulator, store })
     }
 
     pub fn init_tpm(&mut self) -> Result<(), HarnessError> {
@@ -102,6 +105,10 @@ impl Harness for TpmSimulatorHarness {
     fn set_locality(&mut self, locality: u8) -> Result<(), HarnessError> {
         self.simulator.connection_mut().set_locality(locality);
         Ok(())
+    }
+
+    fn store_mut(&mut self) -> Result<&mut Store, HarnessError> {
+        Ok(&mut self.store)
     }
 }
 

@@ -7,12 +7,12 @@ use crate::parse::consts::*;
 use crate::response::Part;
 use const_format::concatcp;
 use nom::branch::alt;
-use nom::bytes::complete::tag;
-use nom::character::complete::{char, one_of};
-use nom::combinator::{all_consuming, map, recognize};
+use nom::bytes::complete::{tag, take_while1};
+use nom::character::complete::{char, digit1, one_of};
+use nom::combinator::{all_consuming, map, map_res, recognize};
 use nom::error::{Error, ErrorKind};
 use nom::multi::{many0, many1};
-use nom::sequence::{delimited, preceded, terminated};
+use nom::sequence::{delimited, preceded, separated_pair, terminated};
 use nom::{Finish, IResult, Parser};
 
 pub type ParseError = nom::Err<nom::error::Error<String>>;
@@ -61,6 +61,17 @@ fn parse_logical_operator(input: &str) -> IResult<&str, &str> {
         tag(GREATER_THAN),
     ))
     .parse(input)
+}
+
+/// Parses an identifier from `input`. Identifiers are composed of alphanumeric
+/// characters and underscores.
+fn parse_identifier(input: &str) -> IResult<&str, &str> {
+    take_while1(|c: char| c.is_alphanumeric() || c == '_').parse(input)
+}
+
+/// Parses a u32 from `input`.
+fn parse_u32(input: &str) -> IResult<&str, u32> {
+    map_res(digit1, |s: &str| s.parse::<u32>()).parse(input)
 }
 
 /// Custom parser for numeric literals (hex and binary) which accepts an input
@@ -125,6 +136,14 @@ fn parse_compare_part(input: &str) -> IResult<&str, Part<'_>> {
     }
 }
 
+/// Parses a capture part from an encoded response.
+fn parse_capture_part(input: &str) -> IResult<&str, Part<'_>> {
+    let (input, (name, length)) =
+        separated_pair(parse_identifier, char(':'), parse_u32).parse(input)?;
+
+    Ok((input, Part::Capture(name, length)))
+}
+
 /// Parses expansion control sequences.
 fn parse_expansion_control_sequence(input: &str) -> IResult<&str, Part<'_>> {
     terminated(
@@ -138,11 +157,21 @@ fn parse_expansion_control_sequence(input: &str) -> IResult<&str, Part<'_>> {
     .parse(input)
 }
 
+/// Parses capture control sequences.
+fn parse_capture_control_sequence(input: &str) -> IResult<&str, Part<'_>> {
+    terminated(
+        delimited(char(CAPTURE_START), parse_capture_part, char(CAPTURE_END)),
+        many0(char(SPACE)),
+    )
+    .parse(input)
+}
+
 /// Parse an encoded response.
 pub fn parse_encoded_response(input: &str) -> Result<Vec<Part<'_>>, ParseError> {
     match all_consuming(many1(alt((
-        parse_hex_part,
         parse_expansion_control_sequence,
+        parse_capture_control_sequence,
+        parse_hex_part,
     ))))
     .parse(input)
     .finish()

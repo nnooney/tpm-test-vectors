@@ -17,7 +17,7 @@ pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> anyhow::Resu
                 let mut buf = [0u8; tpm2_rs_client::RESP_BUFFER_SIZE];
                 let resp = harness.transact(&Input::to_tpm_bytes(&command.input)?, &mut buf)?;
 
-                Response::evaluate(&command.response, resp)
+                Response::evaluate(&command.response, resp, harness.store_mut()?)
                     .context(format!("\nFailure in step \"{step}\"", step = command.step))?;
             }
             TestStep::EnterFailureMode => {

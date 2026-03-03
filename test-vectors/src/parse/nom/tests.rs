@@ -103,6 +103,19 @@ fn test_parse_logical_operator() {
 }
 
 #[test]
+fn test_parse_identifier() {
+    assert_eq!(parse_identifier("foo"), Ok(("", "foo")));
+    assert_eq!(parse_identifier("foo_bar"), Ok(("", "foo_bar")));
+    assert_eq!(parse_identifier("foo123"), Ok(("", "foo123")));
+    assert_eq!(parse_identifier("f1o2o3"), Ok(("", "f1o2o3")));
+    assert_eq!(parse_identifier("_foo"), Ok(("", "_foo")));
+    assert_eq!(parse_identifier("FOO"), Ok(("", "FOO")));
+    assert!(parse_identifier("").is_err());
+    assert!(parse_identifier("!foo").is_err());
+    assert!(all_consuming(parse_identifier).parse("foo-bar").is_err());
+}
+
+#[test]
 fn test_parse_binary_part() {
     assert_eq!(
         parse_binary_part("0b00000101"),
@@ -174,6 +187,22 @@ fn test_parse_compare_part() {
 }
 
 #[test]
+fn test_parse_capture_part() {
+    assert_eq!(
+        parse_capture_part("foo:1"),
+        Ok(("", Part::Capture("foo", 1)))
+    );
+    assert_eq!(
+        parse_capture_part("foo_bar:12"),
+        Ok(("", Part::Capture("foo_bar", 12)))
+    );
+    assert!(parse_capture_part("foo:").is_err());
+    assert!(parse_capture_part("foo").is_err());
+    assert!(parse_capture_part(":1").is_err());
+    assert!(parse_capture_part("foo:bar").is_err());
+}
+
+#[test]
 fn test_parse_expansion_control_sequence() {
     assert_eq!(
         parse_expansion_control_sequence("{TPM2B}"),
@@ -226,6 +255,22 @@ fn test_parse_expansion_control_sequence() {
 }
 
 #[test]
+fn test_parse_capture_control_sequence() {
+    assert_eq!(
+        parse_capture_control_sequence("(foo:1)"),
+        Ok(("", Part::Capture("foo", 1)))
+    );
+    assert_eq!(
+        parse_capture_control_sequence("(foo:1)_"),
+        Ok(("", Part::Capture("foo", 1)))
+    );
+    assert!(parse_capture_control_sequence("(foo:1").is_err());
+    assert!(parse_capture_control_sequence("foo:1)").is_err());
+    assert!(parse_capture_control_sequence("()").is_err());
+    assert!(parse_capture_control_sequence("(invalid)").is_err());
+}
+
+#[test]
 fn test_parse_encoded_response() {
     assert_eq!(
         parse_encoded_response("0123"),
@@ -247,6 +292,22 @@ fn test_parse_encoded_response() {
     assert_eq!(
         parse_encoded_response("0123{TPM2B}"),
         Ok(vec![Part::Hex("0123", 4), Part::TPM2B])
+    );
+    assert_eq!(
+        parse_encoded_response("01(foo:4)23"),
+        Ok(vec![
+            Part::Hex("01", 2),
+            Part::Capture("foo", 4),
+            Part::Hex("23", 2)
+        ])
+    );
+    assert_eq!(
+        parse_encoded_response("(foo:4)0123"),
+        Ok(vec![Part::Capture("foo", 4), Part::Hex("0123", 4),])
+    );
+    assert_eq!(
+        parse_encoded_response("0123(foo:4)"),
+        Ok(vec![Part::Hex("0123", 4), Part::Capture("foo", 4),])
     );
     assert_eq!(
         parse_encoded_response("01{0b00000001}23"),
@@ -293,6 +354,8 @@ fn test_parse_encoded_response() {
     assert!(parse_encoded_response("}").is_err());
     assert!(parse_encoded_response("01{02").is_err());
     assert!(parse_encoded_response("01}02").is_err());
+    assert!(parse_encoded_response("01(foo:1").is_err());
+    assert!(parse_encoded_response("01)foo:1").is_err());
 }
 
 #[test]

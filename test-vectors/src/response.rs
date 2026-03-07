@@ -299,7 +299,7 @@ impl<'a> Part<'a> {
     fn check(
         &self,
         data: PartialMatch<'a>,
-        store: &mut Store,
+        store: &mut dyn Store,
     ) -> Result<PartialMatch<'a>, ResponseEvaluationError> {
         match self {
             Self::Hex(expected, count) => {
@@ -411,7 +411,7 @@ impl<'a> Part<'a> {
             Self::Capture(name, length) => {
                 let num_hex_chars = *length as usize * 2;
                 let (data_part, data_rest) = split_data_part(&data, num_hex_chars)?;
-                store.insert(*name, data_part.to_string());
+                store.insert(name, data_part);
                 Ok(PartialMatch {
                     matched: data.matched + num_hex_chars / 2,
                     remaining: data_rest,
@@ -466,7 +466,7 @@ impl<'a> Response<'a> {
 
     /// Check the response against actual `data` (formated as a hexadecimal
     /// string) returned from the TPM.
-    pub fn check(&self, data: &str, store: &mut Store) -> Result<(), ResponseEvaluationError> {
+    pub fn check(&self, data: &str, store: &mut dyn Store) -> Result<(), ResponseEvaluationError> {
         if data.len() < self.min_len {
             return Err(ResponseEvaluationError::ResponseTooShort(
                 self.min_len,
@@ -489,7 +489,7 @@ impl<'a> Response<'a> {
     pub fn evaluate(
         encoded: &EncodedResponse,
         data: &[u8],
-        store: &mut Store,
+        store: &mut dyn Store,
     ) -> Result<(), ResponseEvaluationError> {
         let response = parse::response(encoded)?;
         response.check(&hex::encode(data), store)

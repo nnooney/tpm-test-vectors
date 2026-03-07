@@ -105,7 +105,7 @@ pub trait Harness {
     }
 
     /// Provides mutable access to the test's value store.
-    fn store_mut(&mut self) -> Result<&mut store::Store, HarnessError> {
+    fn store_mut(&mut self) -> Result<&mut dyn Store, HarnessError> {
         Err(HarnessError::new(HarnessErrorKind::StoreUnsupported))
     }
 }

@@ -200,6 +200,7 @@ fn test_parse_capture_part() {
     assert!(parse_capture_part("foo").is_err());
     assert!(parse_capture_part(":1").is_err());
     assert!(parse_capture_part("foo:bar").is_err());
+    assert!(parse_capture_part("foo-bar:12").is_err());
 }
 
 #[test]

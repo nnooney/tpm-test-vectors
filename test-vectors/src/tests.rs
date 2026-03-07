@@ -25,28 +25,22 @@ fn test_check_step_success(
 #[rstest]
 #[case::input_too_short("src/testdata/01-input-too-short.ron", "input too short")]
 #[case::response_too_short("src/testdata/02-response-too-short.ron", "response too short")]
-fn test_check_command_response_pair_errors(
-    #[case] input: &str,
-    #[case] expected: &str,
-) -> anyhow::Result<()> {
+#[case::parse_input_error("src/testdata/03-parse-input-error.ron", "parse input error")]
+#[case::parse_response_error("src/testdata/04-parse-response-error.ron", "parse response error")]
+#[case::invalid_locality("src/testdata/05-invalid-locality.ron", "invalid locality")]
+fn test_check_step_errors(#[case] input: &str, #[case] expected: &str) -> anyhow::Result<()> {
     let contents = std::fs::read_to_string(input)
         .with_context(|| format!("Failed to read testdata file from {}", input))?;
-    let command = parse::command_response_pair(&contents).with_context(|| {
-        format!(
-            "Failed to parse contents as CommandResponsePair from {}",
-            input
-        )
-    })?;
+    let step = parse::test_step(&contents)
+        .with_context(|| format!("Failed to parse contents as TestStep from {}", input))?;
 
-    let result = command.check();
+    let result = step.check();
 
     match result {
-        Ok(()) => {
-            return Err(anyhow::anyhow!(
-                "Expected failure but succeeded for input {}",
-                input
-            ));
-        }
+        Ok(()) => Err(anyhow::anyhow!(
+            "Expected failure but succeeded for input {}",
+            input
+        ))?,
         Err(err) => assert!(
             format_error(&err)?.contains(expected),
             r#"err does not contain expected substring

@@ -1,5 +1,5 @@
-CommandResponsePair(
-  step: "[test] Input too short",
-  input: "01020304",
-  response: "01020304",
+SendCommand(
+    step: "Input Too Short",
+    input: "8001",
+    response: "80010000000a00000000",
 )

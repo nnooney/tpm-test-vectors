@@ -5,7 +5,7 @@
 //!   2. nom, for parsing encoded fields.
 use crate::input::{EncodedInput, Input};
 use crate::response::{EncodedResponse, Response};
-use crate::{CommandResponsePair, TpmTestVector};
+use crate::{CommandResponsePair, TestStep, TpmTestVector};
 
 use core::fmt;
 
@@ -56,6 +56,12 @@ impl From<nom::ParseError> for ParseError {
 pub fn tpm_test_vector(input: &str) -> Result<TpmTestVector, ParseError> {
     let test_vector: TpmTestVector = ron::parser().from_str(input)?;
     Ok(test_vector)
+}
+
+/// Parses a [`TestStep`].
+pub fn test_step(input: &str) -> Result<TestStep, ParseError> {
+    let test_step: TestStep = ron::parser().from_str(input)?;
+    Ok(test_step)
 }
 
 /// Parses a [`CommandResponsePair`].

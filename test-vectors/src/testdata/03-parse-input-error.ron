@@ -1,0 +1,5 @@
+SendCommand(
+    step: "Parse Input Error",
+    input: "80010000000c000001440000000g", // invalid hex 'g'
+    response: "80010000000a00000000",
+)

@@ -1,0 +1,16 @@
+// On TPM Restart:
+//
+// • TPMS_CLOCK_INFO.restartCount shall be incremented,
+TpmTestVector(
+  name: "[TPM2_Startup] Restart handles clock info",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

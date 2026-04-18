@@ -1,0 +1,16 @@
+// On TPM Reset:
+//
+// • tracking data for saved session contexts shall be set to its initial value,
+TpmTestVector(
+  name: "[TPM2_Startup] Reset clears saved session context tracking data",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

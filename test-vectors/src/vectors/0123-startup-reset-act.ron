@@ -1,0 +1,18 @@
+// On TPM Reset:
+//
+// • For each ACT the timeout is reset to zero, the signaled attribute is set to
+// CLEAR, its authPolicy is set to the Empty Buffer, and its hashAlg is set to
+// TPM_ALG_NULL.
+TpmTestVector(
+  name: "[TPM2_Startup] Reset handles ACTs",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

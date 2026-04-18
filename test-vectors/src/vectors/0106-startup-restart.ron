@@ -14,5 +14,39 @@ TpmTestVector(
       response: "8001_0000000a_00000000",
     ),
     // TODO: Confirm values have default initialization.
+    // On any TPM2_Startup(),
+    // • phEnable shall be SET;
+    SendCommand(
+      step: "Ensure phEnable is SET",
+      input: "8001_00000016_0000017a_00000006_00000201_00000001",
+      response: "8001_0000001b_00000000_**_00000006_00000001_00000201_{0b********_********_********_*******1}",
+    ),
+    // • all transient contexts (objects, sessions, and sequences) shall be flushed from TPM memory;
+    SendCommand(
+      step: "Ensure all objects and sequences are flushed from TPM memory",
+      // Grab the list of transient object handles, ensure it has length zero.
+      input: "8001_00000016_0000017a_00000001_80000000_00000001",
+      response: "8001_00000013_00000000_00_00000001_00000000",
+    ),
+    SendCommand(
+      step: "Ensure all sessions are flushed from TPM memory",
+      // Check that the number of loaded sessions property is zero.
+      input: "8001_00000016_0000017a_00000006_00000203_00000001",
+      response: "8001_0000001b_00000000_**_00000006_00000001_00000203_00000000",
+    ),
+    // • Time should not be reset unless the TPM requires a _TPM_Init indication
+    // before resuming operation.
+    SendCommand(
+      step: "Ensure time was reset",
+      input: "8001_0000000a_00000181",
+      // Check less than 2 minutes (120000 ms)
+      response: "8001_00000023_00000000_{<000000000001D4C0}_****************_********_********_**"
+    )
+    // • use of lockoutAuth shall be enabled if lockoutRecovery is zero.
+    //
+    // TODO: The only way to check that using lockoutAuth is possible is to use
+    // TPM_RH_LOCKOUT as the associated handle of a password session and check
+    // that we don't receive TPM_RC_LOCKOUT. This is also conditional on
+    // checking lockoutRecovery, which can be obtained via TPM2_GetCapability.
   ]
 )

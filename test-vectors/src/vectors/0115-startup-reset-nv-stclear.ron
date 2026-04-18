@@ -1,0 +1,17 @@
+// On TPM Reset:
+//
+// • For each NV Index with TPMA_NV_CLEAR_STCLEAR SET, TPMA_NV_WRITTEN shall be
+// CLEAR,
+TpmTestVector(
+  name: "[TPM2_Startup] Reset clears TPMA_NV_WRITTEN",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

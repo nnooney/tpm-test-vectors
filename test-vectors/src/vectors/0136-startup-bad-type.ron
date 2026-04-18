@@ -1,0 +1,15 @@
+// If startupType is neither TPM_SU_STATE nor TPM_SU_CLEAR, then the
+// unmarshaling code returns TPM_RC_VALUE.
+TpmTestVector(
+  name: "[TPM2_Startup] bas startupType",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

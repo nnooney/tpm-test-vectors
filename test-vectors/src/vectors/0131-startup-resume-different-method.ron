@@ -1,0 +1,17 @@
+// On TPM Resume:
+//
+// • the H-CRTM startup method is the same for this TPM2_Startup() as for the
+// previous TPM2_Startup(); (TPM_RC_LOCALITY)
+TpmTestVector(
+  name: "[TPM2_Startup] Resume requires same startup method as previous startup",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

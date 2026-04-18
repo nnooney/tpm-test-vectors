@@ -1,0 +1,16 @@
+// On TPM Reset:
+//
+// • a new context encryption key shall be generated,
+TpmTestVector(
+  name: "[TPM2_Startup] Reset generates new context encryption key",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

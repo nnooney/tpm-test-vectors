@@ -1,0 +1,19 @@
+// On TPM Reset:
+//
+// • PCR in all banks are reset to their default initial conditions as
+// determined by the relevant platform-specific specification and the H-CRTM
+// state (for exceptions, see TPM 2.0 Part 1, H-CRTM before TPM2_Startup() and
+// TPM2_Startup() without H-CRTM),
+TpmTestVector(
+  name: "[TPM2_Startup] Reset handles PCR values",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

@@ -1,0 +1,18 @@
+// If the startupType is TPM_SU_STATE and the TPM requires TPM_SU_CLEAR, then
+// the TPM shall return TPM_RC_VALUE.
+//
+// The TPM will require TPM_SU_CLEAR when no shutdown was performed or after
+// Shutdown(CLEAR).
+TpmTestVector(
+  name: "[TPM2_Startup] TPM_SU_STATE provided when TPM_SU_CLEAR required",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

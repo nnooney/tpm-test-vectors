@@ -1,0 +1,16 @@
+// On TPM Reset:
+//
+// • the object context sequence number is reset to zero,
+TpmTestVector(
+  name: "[TPM2_Startup] Reset resets object context sequence number",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

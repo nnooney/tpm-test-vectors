@@ -1,0 +1,20 @@
+// On TPM Reset:
+//
+// • the PCR Update Counter (pcrUpdateCounter) shall be clear to zero,
+//
+// Because the PCR update counter is permitted to be incremented when a PCR is
+// reset, the PCR resets performed as part of this command can result in the PCR
+// update counter being non-zero at the end of this command.
+TpmTestVector(
+  name: "[TPM2_Startup] Reset clears PCR update counter",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+    SendCommand(
+      step: "Issue TPM Startup Command",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
+  ]
+)

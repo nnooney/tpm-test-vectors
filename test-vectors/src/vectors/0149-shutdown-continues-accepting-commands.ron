@@ -1,0 +1,3 @@
+// [TPM2_Shutdown] saves TPM state but does not change the state other than the
+// internal indication that the context has been saved. The TPM shall continue
+// to accept commands.

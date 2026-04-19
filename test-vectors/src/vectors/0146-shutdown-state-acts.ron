@@ -1,0 +1,5 @@
+// For a shutdownType of TPM_SU_STATE, the following additional items are saved:
+// • the counter value and authPolicy for each ACT;
+//
+// If a counter has not been updated since the last TPM2_Startup(), then the
+// saved value will be one half of the current counter value.

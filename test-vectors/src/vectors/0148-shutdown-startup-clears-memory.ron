@@ -1,0 +1,6 @@
+// The following items shall not be saved and will not be in TPM memory after
+// the next TPM2_Startup():
+//
+// • TPM-memory-resident session contexts;
+// • TPM-memory-resident transient objects; or
+// • TPM-memory-resident hash contexts created by TPM2_HashSequenceStart().

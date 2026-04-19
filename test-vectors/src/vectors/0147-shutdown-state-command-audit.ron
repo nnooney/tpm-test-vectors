@@ -1,0 +1,2 @@
+// For a shutdownType of TPM_SU_STATE, the following additional items are saved:
+// • the command audit digest and count.

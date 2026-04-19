@@ -1,0 +1,3 @@
+// For a shutdownType of any type, the volatile portion of Clock is saved to NV
+// memory and the orderly shutdown indication is SET. NV Indexes with the
+// TPMA_NV_ORDERLY attribute will be updated.

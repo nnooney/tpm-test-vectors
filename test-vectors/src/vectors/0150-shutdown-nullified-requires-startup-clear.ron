@@ -1,0 +1,6 @@
+// If a subsequent command changes TPM state saved by [TPM2_Shutdown], then the
+// effect of [TPM2_Shutdown] is nullified. The TPM MAY nullify [TPM2_Shutdown]
+// for any subsequent command rather than check whether the command changed
+// state saved by [TPM2_Shutdown]. If [TPM2_Shutdown] is nullified. and if no
+// TPM2_Shutdown() occurs before the next TPM2_Startup(), then the next
+// TPM2_Startup() shall be TPM2_Startup(TPM_SU_CLEAR).

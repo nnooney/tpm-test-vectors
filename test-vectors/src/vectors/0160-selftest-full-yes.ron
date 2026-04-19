@@ -1,0 +1,10 @@
+// [TPM2_Selftest] causes the TPM to perform a test of its capabilities. If the
+// fullTest is YES, the TPM will test all functions. If any tests are required,
+// the TPM shall either
+//
+// • return TPM_RC_TESTING and begin self-test of the required functions, or
+// • perform the tests and return the test result when complete. On failure, the
+// TPM shall return TPM_RC_FAILURE.
+//
+// The PC Client platform specific TPM, in response to fullTest YES, will not
+// return TPM_RC_TESTING. It will block until all tests are complete.

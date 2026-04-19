@@ -1,0 +1,4 @@
+// If the TPM uses option a) (return TPM_RC_TESTING and begin self-test of the
+// required functions), the TPM shall return TPM_RC_TESTING for any command that
+// requires use of a testable function, even if the functions required for
+// completion of the command have already been tested.

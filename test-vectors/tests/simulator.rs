@@ -3,8 +3,6 @@ use tempfile::tempdir;
 use tpm2_rs_client::connection::{Connection, TcpSimulator};
 use tpm2_test_vectors::{Harness, HarnessError, InMemoryStore, Store};
 
-mod common;
-
 /// Environment variable used to connect to the TPM simulator over TCP.
 const ENV_VAR_SIMULATOR_IP: &str = "SIMULATOR_IP";
 
@@ -115,12 +113,12 @@ impl Harness for TpmSimulatorHarness {
 #[rstest]
 fn simulator(
     #[files("*.ron")]
-    #[base_dir = "src/vectors/"]
+    #[base_dir = "data/"]
     #[mode = str]
-    tv: &str,
+    t: &str,
 ) -> anyhow::Result<()> {
     let mut harness = TpmSimulatorHarness::new()?;
     harness.init_tpm()?;
 
-    common::run_test_vector(tv, &mut harness)
+    Ok(tpm2_test_vectors::run_test_vector(t, &mut harness)?)
 }

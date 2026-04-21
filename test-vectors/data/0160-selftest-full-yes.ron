@@ -8,3 +8,11 @@
 //
 // The PC Client platform specific TPM, in response to fullTest YES, will not
 // return TPM_RC_TESTING. It will block until all tests are complete.
+TpmTestVector(
+  name: "[TPM2_SelfTest] full self test",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

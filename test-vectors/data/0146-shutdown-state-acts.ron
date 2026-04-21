@@ -3,3 +3,11 @@
 //
 // If a counter has not been updated since the last TPM2_Startup(), then the
 // saved value will be one half of the current counter value.
+TpmTestVector(
+  name: "[TPM2_Shutdown] saves ACT info",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

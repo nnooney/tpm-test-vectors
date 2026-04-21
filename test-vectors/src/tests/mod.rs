@@ -9,11 +9,11 @@ use crate::parse;
 #[rstest]
 fn test_check_step_success(
     #[files("*.ron")]
-    #[base_dir = "src/vectors/"]
+    #[base_dir = "data/"]
     #[mode = str]
-    tv: &str,
+    t: &str,
 ) -> anyhow::Result<()> {
-    let test_vector = parse::tpm_test_vector(tv)?;
+    let test_vector = parse::tpm_test_vector(t)?;
 
     for command in test_vector.test_sequence {
         command.check()?;
@@ -23,11 +23,11 @@ fn test_check_step_success(
 }
 
 #[rstest]
-#[case::input_too_short("src/testdata/01-input-too-short.ron", "input too short")]
-#[case::response_too_short("src/testdata/02-response-too-short.ron", "response too short")]
-#[case::parse_input_error("src/testdata/03-parse-input-error.ron", "parse input error")]
-#[case::parse_response_error("src/testdata/04-parse-response-error.ron", "parse response error")]
-#[case::invalid_locality("src/testdata/05-invalid-locality.ron", "invalid locality")]
+#[case::input_too_short("src/tests/01-input-too-short.ron", "input too short")]
+#[case::response_too_short("src/tests/02-response-too-short.ron", "response too short")]
+#[case::parse_input_error("src/tests/03-parse-input-error.ron", "parse input error")]
+#[case::parse_response_error("src/tests/04-parse-response-error.ron", "parse response error")]
+#[case::invalid_locality("src/tests/05-invalid-locality.ron", "invalid locality")]
 fn test_check_step_errors(#[case] input: &str, #[case] expected: &str) -> anyhow::Result<()> {
     let contents = std::fs::read_to_string(input)
         .with_context(|| format!("Failed to read testdata file from {}", input))?;

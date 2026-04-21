@@ -1,3 +1,11 @@
 // For a shutdownType of TPM_SU_STATE, the following additional items are saved:
 // • flags associated with supporting the TPMA_NV_WRITESTCLEAR and
 // TPMA_NV_READSTCLEAR attributes;
+TpmTestVector(
+  name: "[TPM2_Shutdown] saves nv attributes",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

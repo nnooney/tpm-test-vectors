@@ -1,3 +1,11 @@
 // For a shutdownType of TPM_SU_STATE, the following additional items are saved:
 // • tracking information for saved session contexts;
 // • the session context counter;
+TpmTestVector(
+  name: "[TPM2_Shutdown] saves session context info",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

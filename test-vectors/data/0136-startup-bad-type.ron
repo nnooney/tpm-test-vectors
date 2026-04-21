@@ -1,7 +1,7 @@
 // If startupType is neither TPM_SU_STATE nor TPM_SU_CLEAR, then the
 // unmarshaling code returns TPM_RC_VALUE.
 TpmTestVector(
-  name: "[TPM2_Startup] bas startupType",
+  name: "[TPM2_Startup] bad startupType",
   spec_versions: [
     184,
   ],

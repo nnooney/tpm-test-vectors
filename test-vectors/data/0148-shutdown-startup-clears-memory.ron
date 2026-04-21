@@ -4,3 +4,11 @@
 // • TPM-memory-resident session contexts;
 // • TPM-memory-resident transient objects; or
 // • TPM-memory-resident hash contexts created by TPM2_HashSequenceStart().
+TpmTestVector(
+  name: "[TPM2_Shutdown] clears memory upon next startup",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

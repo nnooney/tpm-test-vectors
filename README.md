@@ -6,7 +6,7 @@ Test vectors for validating TPM implementations.
 
 The test vectors themselves are expressed using Rusty Object Notation
 ([`ron`](https://github.com/ron-rs/ron)) and located in
-[`test-vectors/src/vectors`](test-vectors/src/vectors/).
+[`test-vectors/data`](test-vectors/data/).
 
 The `test-vectors` crate also contains code to issue the test vectors against a
 TPM implementation, using the `tpm2-client` crate from the

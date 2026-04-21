@@ -2,3 +2,11 @@
 // required functions), the TPM shall return TPM_RC_TESTING for any command that
 // requires use of a testable function, even if the functions required for
 // completion of the command have already been tested.
+TpmTestVector(
+  name: "[TPM2_SelfTest] background testing halts commands using tested functions",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

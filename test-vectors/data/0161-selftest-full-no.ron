@@ -8,3 +8,11 @@
 //
 // If fullTest is NO, and all functions have been tested, the TPM shall return
 // TPM_RC_SUCCESS.
+TpmTestVector(
+  name: "[TPM2_SelfTest] partial self test",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

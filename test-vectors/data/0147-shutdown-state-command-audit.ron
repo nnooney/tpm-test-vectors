@@ -1,0 +1,10 @@
+// For a shutdownType of TPM_SU_STATE, the following additional items are saved:
+// • the command audit digest and count.
+TpmTestVector(
+  name: "[TPM2_Shutdown] saves command audit digest and count",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

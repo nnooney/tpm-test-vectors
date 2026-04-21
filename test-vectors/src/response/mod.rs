@@ -1,7 +1,7 @@
 //! A response is an encoded string describing the expected response from a
 //! TPM command.
 
-use crate::harness::store::Store;
+use crate::harness::Store;
 use crate::parse::consts::*;
 use crate::parse::{self, ParseError};
 

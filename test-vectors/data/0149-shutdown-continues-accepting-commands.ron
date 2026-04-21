@@ -1,3 +1,11 @@
 // [TPM2_Shutdown] saves TPM state but does not change the state other than the
 // internal indication that the context has been saved. The TPM shall continue
 // to accept commands.
+TpmTestVector(
+  name: "[TPM2_Shutdown] can send commands after shutdown",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

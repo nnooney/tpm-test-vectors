@@ -1,3 +1,11 @@
 // v184 of the TPM Specification does not specify what happens when a bad type
 // is provided; however, when a bad type is provided to TPM2_Startup, the
 // unmarshaling code returns TPM_RC_VALUE, so we check that here too.
+TpmTestVector(
+  name: "[TPM2_Shutdown] bad type",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

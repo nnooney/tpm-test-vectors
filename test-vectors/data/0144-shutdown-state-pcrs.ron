@@ -1,3 +1,11 @@
 // For a shutdownType of TPM_SU_STATE, the following additional items are saved:
 // • PCR that are designated as being preserved by TPM2_Shutdown(TPM_SU_STATE);
 // • the PCR Update Counter (pcrUpdateCounter);
+TpmTestVector(
+  name: "[TPM2_Shutdown] saves pcr info",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

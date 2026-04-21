@@ -4,3 +4,11 @@
 // state saved by [TPM2_Shutdown]. If [TPM2_Shutdown] is nullified. and if no
 // TPM2_Shutdown() occurs before the next TPM2_Startup(), then the next
 // TPM2_Startup() shall be TPM2_Startup(TPM_SU_CLEAR).
+TpmTestVector(
+  name: "[TPM2_Shutdown] nullified shutdown requires startup clear",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,7 +1,7 @@
-//! The harness module provides type definitions and default implementations for
-//! running the test vectors.
+//! The harness module provides logic to run the test vectors against a
+//! particular TPM implementation.
 
-pub mod store;
+mod store;
 pub use store::*;
 
 use core::error::Error;

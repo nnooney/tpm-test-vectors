@@ -78,17 +78,20 @@ impl From<ResponseEvaluationError> for TestErrorKind {
 pub struct TestError {
     // Name of the test that failed.
     name: String,
+    // Step within the test that failed. May be empty.
+    step: Option<String>,
     // Details about the failure that occurred.
     kind: TestErrorKind,
 }
 
 impl TestError {
-    pub fn new<T>(name: String, err: T) -> Self
+    pub fn new<T>(name: String, step: Option<String>, err: T) -> Self
     where
         TestErrorKind: From<T>,
     {
         Self {
             name,
+            step,
             kind: err.into(),
         }
     }
@@ -101,7 +104,11 @@ impl fmt::Display for TestError {
         } else {
             &self.name
         };
-        write!(f, "Error in test \"{name}\"")
+        write!(f, "\nError in test \"{name}\"")?;
+        if let Some(step) = &self.step {
+            write!(f, "\n      in step \"{step}\"")?;
+        }
+        Ok(())
     }
 }
 
@@ -114,44 +121,46 @@ impl Error for TestError {
 /// run_test_vector applies the `input` test vector to the TPM using the
 /// `harness` that implements the [`Harness`] trait.
 pub fn run_test_vector<H: Harness>(input: &str, harness: &mut H) -> Result<(), Box<TestError>> {
-    let test_case = parse::tpm_test_vector(input).map_err(|e| TestError::new(String::new(), e))?;
+    let test_case =
+        parse::tpm_test_vector(input).map_err(|e| TestError::new(String::new(), None, e))?;
 
     for step in test_case.test_sequence {
         step.check()
-            .map_err(|e| TestError::new(test_case.name.clone(), e))?;
+            .map_err(|e| TestError::new(test_case.name.clone(), Some(step.name()), e))?;
 
         match step {
-            TestStep::SendCommand(command) => {
+            TestStep::SendCommand(ref command) => {
                 // 4096 matches [`tpm2_rs_client::RESP_BUFFER_SIZE`], but we
                 // inline the constant here to avoid taking a runtime dependency
                 // on the client, prefering to keep it a dev-dependency.
                 let mut buf = [0u8; 4096];
                 let resp = harness
                     .transact(
-                        &Input::to_tpm_bytes(&command.input)
-                            .map_err(|e| TestError::new(test_case.name.clone(), e))?,
+                        &Input::to_tpm_bytes(&command.input).map_err(|e| {
+                            TestError::new(test_case.name.clone(), Some(step.name()), e)
+                        })?,
                         &mut buf,
                     )
-                    .map_err(|e| TestError::new(test_case.name.clone(), e))?;
+                    .map_err(|e| TestError::new(test_case.name.clone(), Some(step.name()), e))?;
 
                 Response::evaluate(
                     &command.response,
                     resp,
-                    harness
-                        .store_mut()
-                        .map_err(|e| TestError::new(test_case.name.clone(), e))?,
+                    harness.store_mut().map_err(|e| {
+                        TestError::new(test_case.name.clone(), Some(step.name()), e)
+                    })?,
                 )
-                .map_err(|e| TestError::new(test_case.name.clone(), e))?;
+                .map_err(|e| TestError::new(test_case.name.clone(), Some(step.name()), e))?;
             }
             TestStep::EnterFailureMode => {
                 harness
                     .set_failure_mode()
-                    .map_err(|e| TestError::new(test_case.name.clone(), e))?;
+                    .map_err(|e| TestError::new(test_case.name.clone(), Some(step.name()), e))?;
             }
-            TestStep::SetLocality(locality) => {
+            TestStep::SetLocality(ref locality) => {
                 harness
                     .set_locality(locality.0)
-                    .map_err(|e| TestError::new(test_case.name.clone(), e))?;
+                    .map_err(|e| TestError::new(test_case.name.clone(), Some(step.name()), e))?;
             }
         }
     }

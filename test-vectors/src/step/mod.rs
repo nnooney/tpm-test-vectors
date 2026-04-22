@@ -158,9 +158,18 @@ impl TestStep {
     /// function indicate issues in the authoring of the TestStep.
     pub fn check(&self) -> Result<(), TestStepError> {
         match self {
-            Self::SendCommand(pair) => pair.check(),
+            Self::SendCommand(cmd) => cmd.check(),
             Self::EnterFailureMode => Ok(()),
             Self::SetLocality(locality) => locality.check(),
+        }
+    }
+
+    /// name returns the name of the TestStep, useful for diagnostics.
+    pub fn name(&self) -> String {
+        match self {
+            Self::SendCommand(cmd) => cmd.step.clone(),
+            Self::EnterFailureMode => "EnterFailureMode".to_owned(),
+            Self::SetLocality(locality) => format!("SetLocality {}", locality.0),
         }
     }
 }

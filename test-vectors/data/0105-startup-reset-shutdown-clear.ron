@@ -18,6 +18,16 @@ TpmTestVector(
       input: "8001_0000000c_00000144_0000",
       response: "8001_0000000a_00000000",
     ),
+    SendCommand(
+      step: "Issue TPM Shutdown Command with type CLEAR",
+      input: "8001_0000000c_00000145_0000",
+      response: "8001_0000000a_00000000",
+    ),
+    SendCommand(
+      step: "Issue TPM Startup Command after shutdown:clear",
+      input: "8001_0000000c_00000144_0000",
+      response: "8001_0000000a_00000000",
+    ),
     // TODO: Confirm values have default initialization.
     // On any TPM2_Startup(),
     // • phEnable shall be SET;

@@ -7,5 +7,10 @@ TpmTestVector(
     184,
   ],
   test_sequence: [
+    SendCommand(
+      step: "TPM2_GetCapability before startup",
+      input: "8001_00000016_0000017a_00000006_00000201_00000001",
+      response: "8001_0000000a_00000100",
+    ),
   ]
 )

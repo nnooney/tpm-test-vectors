@@ -8,7 +8,7 @@ TpmTestVector(
   test_sequence: [
     SendCommand(
       step: "Issue command before startup",
-      // Command = TPM_SelfTest
+      // Command = TPM2_SelfTest
       input: "8001_0000000b_00000143_00",
       response: "8001_0000000a_00000100",
     )

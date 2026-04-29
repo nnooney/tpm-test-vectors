@@ -13,5 +13,7 @@ TpmTestVector(
       // TPM_RC_1 | TPM_RC_P | TPM_RC_VALUE
       response: "8001_0000000a_000001c4",
     ),
+    // Requires the capability to "delete/corrupt" saved state between shutdown
+    // and startup.
   ]
 )

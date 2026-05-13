@@ -1,0 +1,13 @@
+// TPM2_IncrementalSelfTest causes the TPM to perform a test of the selected
+// algorithms.
+//
+// Making toTest an empty list allows the determination of the algorithms that
+// remain untested without triggering any testing.
+TpmTestVector(
+  name: "[TPM2_IncrementalSelfTest] empty toTest list",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

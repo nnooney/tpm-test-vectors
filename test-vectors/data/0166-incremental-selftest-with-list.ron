@@ -1,0 +1,20 @@
+// TPM2_IncrementalSelfTest causes the TPM to perform a test of the selected
+// algorithms.
+//
+// If toTest is not an empty list, the TPM shall return TPM_RC_SUCCESS for this
+// command and then return TPM_RC_TESTING for any subsequent command (including
+// TPM2_IncrementalSelfTest()) until the requested testing is complete.
+//
+// An implementation is permitted to perform all requested tests before
+// returning TPM_RC_SUCCESS, or it is permitted to return TPM_RC_SUCCESS for
+// this command and then return TPM_RC_TESTING for all subsequent commands
+// (including TPM2_IncrementalSelfTest()) until the requested tests are
+// complete.
+TpmTestVector(
+  name: "[TPM2_IncrementalSelfTest] empty toTest list",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

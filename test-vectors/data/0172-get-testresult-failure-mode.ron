@@ -1,0 +1,18 @@
+// TPM2_GetTestResult returns manufacturer-specific information regarding the
+// results of a self-test and an indication of the test status.
+//
+// If TPM2_SelfTest() has not been executed and a testable function has not been
+// tested, testResult will be TPM_RC_NEEDS_TEST. If TPM2_SelfTest() has been
+// received and the tests are not complete, testResult will be TPM_RC_TESTING.
+//
+// If testing of all functions is complete without functional failures,
+// testResult will be TPM_RC_SUCCESS. If any test failed, testResult will be
+// TPM_RC_FAILURE.
+TpmTestVector(
+  name: "[TPM2_GetTestResult] Call in failure mode",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

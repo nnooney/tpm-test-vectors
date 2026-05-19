@@ -1,0 +1,26 @@
+// For all session types, this command will cause initialization of the
+// sessionKey and may establish binding between the session and an entity (the
+// bind entity). If sessionType is TPM_SE_POLICY or TPM_SE_TRIAL, the additional
+// session initialization is:
+//
+// - set policySession→policyDigest to a Zero Digest (the digest size for
+//   policySession→policyDigest is the size of the digest produced by authHash);
+// - authorization may be given at any locality;
+// - authorization may apply to any command code;
+// - authorization may apply to any command parameters or handles;
+// - the authorization has no time limit;
+// - an authValue is not needed when the authorization is used;
+// - the session is not bound;
+// - the session is not an audit session; and
+// - the time at which the policy session was created is recorded
+//
+// Additionally, if sessionType is TPM_SE_TRIAL, the session will not be usable
+// for authorization but can be used to compute the authPolicy for an object.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] start trial session",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

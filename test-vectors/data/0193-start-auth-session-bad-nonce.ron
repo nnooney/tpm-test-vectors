@@ -1,0 +1,10 @@
+// The TPM shall return TPM_RC_SIZE if nonceCaller is less than 16 octets or is
+// greater than the size of the digest produced by authHash.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] bad nonce",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

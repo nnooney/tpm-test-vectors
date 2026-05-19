@@ -1,0 +1,13 @@
+// The TPM shall return TPM_RC_VALUE if:
+//
+// tpmKey references an ECC key and encryptedSalt
+// - does not contain a TPMS_ECC_POINT or
+// - is not a point on the curve of tpmKey;
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] tpmKey ECC bad encryptedSalt",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

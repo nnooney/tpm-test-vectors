@@ -1,0 +1,14 @@
+// If tpmKey is not TPM_RH_NULL, then encryptedSalt is used in the computation
+// of sessionKey.
+//
+// If tpmKey is not TPM_ALG_NULL, then encryptedSalt shall be a
+// TPM2B_ENCRYPTED_SECRET of the proper type for tpmKey. The TPM shall return
+// TPM_RC_HANDLE if the sensitive portion of tpmKey is not loaded.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] tpmKey not loaded",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

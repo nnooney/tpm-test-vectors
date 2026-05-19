@@ -1,0 +1,10 @@
+// If the TPM does not have a free slot for an authorization session, it shall
+// return TPM_RC_SESSION_HANDLES
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] no free slots",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

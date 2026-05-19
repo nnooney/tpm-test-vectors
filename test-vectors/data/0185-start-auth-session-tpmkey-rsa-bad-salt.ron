@@ -1,0 +1,21 @@
+// The TPM shall return TPM_RC_VALUE if:
+//
+// tpmKey references an RSA key and
+// - the size of encryptedSalt is not the same as the size of the public modulus
+//   of tpmKey,
+// - encryptedSalt has a value that is greater than the public modulus of
+//   tpmKey,
+// - encryptedSalt is not a properly encoded OAEP value, or
+// - the decrypted salt value is larger than the size of the digest produced by
+//   the nameAlg of tpmKey;
+//
+// The asymScheme of the key object is ignored in this case and TPM_ALG_OAEP is
+// used, even if asymScheme is set to TPM_ALG_NULL.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] tpmKey RSA bad encryptedSalt",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

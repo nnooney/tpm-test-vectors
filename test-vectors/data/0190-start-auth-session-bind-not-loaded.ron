@@ -1,0 +1,10 @@
+// If bind references a transient object, then the TPM shall return
+// TPM_RC_HANDLE if the sensitive portion of the object is not loaded.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] transient bind object not loaded",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

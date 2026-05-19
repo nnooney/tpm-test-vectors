@@ -1,0 +1,12 @@
+// The TPM shall return TPM_RC_VALUE if the scheme of the key is not
+// TPM_ALG_OAEP or TPM_ALG_NULL.
+//
+// While TPM_RC_VALUE is preferred, TPM_RC_SCHEME is acceptable
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] tpmKey bad scheme",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

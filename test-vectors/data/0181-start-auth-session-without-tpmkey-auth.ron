@@ -1,0 +1,24 @@
+// TPM2_StartAuthSession is used to start an authorization session using
+// alternative methods of establishing the session key (sessionKey). The session
+// key is then used to derive values used for authorization and for encrypting
+// parameters.
+//
+// TPM2_StartAuthSession allows injection of a secret into the TPM using either
+// asymmetric or symmetric encryption. The type of tpmKey determines how the
+// value in encryptedSalt is encrypted. The decrypted secret value is used to
+// compute the sessionKey.
+//
+// No authorization is required for tpmKey or bind.
+//
+// The justification for using tpmKey without providing authorization is that
+// the result of using the key is not available to the caller, except indirectly
+// through the sessionKey. This does not represent a point of attack on the
+// authorization value of the key.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] Use tpmKey without auth",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

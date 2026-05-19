@@ -1,0 +1,10 @@
+// If both tpmKey and bind are TPM_RH_NULL, then sessionKey is set to the Empty
+// Buffer.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] Null tpmKey and null bind",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

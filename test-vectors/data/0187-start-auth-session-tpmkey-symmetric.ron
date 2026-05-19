@@ -1,0 +1,10 @@
+// The TPM shall return TPM_RC_KEY if tpmKey does not reference an asymmetric
+// key.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] tpmKey symmetric",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

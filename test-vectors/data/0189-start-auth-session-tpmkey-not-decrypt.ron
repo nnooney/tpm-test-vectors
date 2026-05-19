@@ -1,0 +1,10 @@
+//  The TPM shall return TPM_RC_ATTRIBUTES if tpmKey does not have the decrypt
+// attribute SET.
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] tpmKey without decrypt attribute",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

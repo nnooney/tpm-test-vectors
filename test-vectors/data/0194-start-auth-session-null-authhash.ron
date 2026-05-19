@@ -1,0 +1,10 @@
+// hash algorithm to use for the session. Shall be a hash algorithm supported by
+// the TPM and not TPM_ALG_NULL
+TpmTestVector(
+  name: "[TPM2_StartAuthSession] null authHash",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

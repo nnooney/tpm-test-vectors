@@ -1,0 +1,10 @@
+// If the Object is a not a keyedHash object, and the sign and encrypt
+// attributes are CLEAR, the TPM shall return TPM_RC_ATTRIBUTES.
+TpmTestVector(
+  name: "[TPM2_Create] sign and encrypt clear with keyedHash",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

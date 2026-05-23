@@ -1,0 +1,33 @@
+// The TPM will create new data for the sensitive area and compute a
+// TPMT_PUBLIC.unique from the sensitive area based on the object type:
+//
+// If the Object is a keyedHash object:
+// 1. If inSensitive.sensitive.data is an Empty Buffer, and both sign and
+//    decrypt are CLEAR in the attributes of inPublic, the TPM shall return
+//    TPM_RC_ATTRIBUTES. This would be a data object with no data.
+// 2. If sign and decrypt are both CLEAR or both SET and the scheme in the
+//    public area of the template is not TPM_ALG_NULL, the TPM shall return
+//    TPM_RC_SCHEME.
+// 3. If inSensitive.sensitive.data is not an Empty Buffer, the TPM will copy
+//    the inSensitive.sensitive.data to TPMT_SENSITIVE.sensitive.bits of the new
+//    object.
+//
+// The size of inSensitive.sensitive.data is limited to be no larger than
+// MAX_SYM_DATA.
+//
+// 4. If inSensitive.sensitive.data is an Empty Buffer, a TPM-generated key
+//    value that is the size of the digest produced by the nameAlg in inPublic
+//    is placed in TPMT_SENSITIVE.sensitive.bits.
+// 5. A TPM-generated obfuscation value that is the size of the digest produced
+//    by the nameAlg of inPublic is placed in TPMT_SENSITIVE.seedValue.
+// 6. The TPMT_PUBLIC.unique.keyedHash value for the new object is then
+//    generated, as shown in Equation 1 above, by hashing the key and
+//    obfuscation values in the TPMT_SENSITIVE with the nameAlg of the object.
+TpmTestVector(
+  name: "[TPM2_Create] keyedhash",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

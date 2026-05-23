@@ -1,0 +1,26 @@
+// When defining the object, the caller provides a template structure for the
+// object in a TPM2B_PUBLIC structure (inPublic), an initial value for the
+// object’s authValue (inSensitive.userAuth), and, if the object is a symmetric
+// object, an optional initial data value (inSensitive.data). The TPM shall
+// validate the consistency of the attributes of inPublic according to the
+// Creation rules in “TPMA_OBJECT” in TPM 2.0 Part 2.
+//
+// If inSensitive.sensitive.data.size is zero, then sensitiveDataOrigin shall be
+// SET in the template; otherwise, it shall be CLEAR in the template. The
+// inSensitive.sensitive.data.size parameter is required to be zero for an
+// asymmetric key so sensitiveDataOrigin is required to be SET. The
+// inSensitive.sensitive.data.size parameter may not be zero for a data object
+// so sensitiveDataOrigin is required to be CLEAR. A data object has type =
+// TPM_ALG_KEYEDHASH and its sign and decrypt attributes are CLEAR.
+//
+// The sensitiveDataOrigin attribute of inPublic shall be SET if
+// inSensitive.data is an Empty Buffer and CLEAR if inSensitive.data is not an
+// Empty Buffer or the TPM shall return TPM_RC_ATTRIBUTES.
+TpmTestVector(
+  name: "[TPM2_Create] sensitiveDataOrigin not consistent with template",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

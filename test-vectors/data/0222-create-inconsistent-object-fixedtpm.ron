@@ -1,0 +1,18 @@
+// When defining the object, the caller provides a template structure for the
+// object in a TPM2B_PUBLIC structure (inPublic), an initial value for the
+// object’s authValue (inSensitive.userAuth), and, if the object is a symmetric
+// object, an optional initial data value (inSensitive.data). The TPM shall
+// validate the consistency of the attributes of inPublic according to the
+// Creation rules in “TPMA_OBJECT” in TPM 2.0 Part 2.
+//
+// If fixedTPM is SET in the object’s parent, then fixedTPM shall equal
+// fixedParent in template. If fixedTPM is CLEAR in the parent, this attribute
+// shall also be CLEAR in template.
+TpmTestVector(
+  name: "[TPM2_Create] fixedTPM not consistent with parent",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

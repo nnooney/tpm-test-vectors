@@ -1,0 +1,14 @@
+// In addition to outPublic and outPrivate, the TPM will build a
+// TPMS_CREATION_DATA structure for the object. TPMS_CREATION_DATA.outsideInfo
+// is set to outsideInfo. This structure is returned in creationData.
+// Additionally, the digest of this structure is returned in creationHash, and,
+// finally, a TPMT_TK_CREATION is created so that the association between the
+// creation data and the object may be validated by TPM2_CertifyCreation().
+TpmTestVector(
+  name: "[TPM2_Create] TPMS_CREATION_DATA and TPMT_TK_CREATION",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

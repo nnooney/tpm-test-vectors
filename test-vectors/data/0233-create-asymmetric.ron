@@ -1,0 +1,35 @@
+// The TPM will create new data for the sensitive area and compute a
+// TPMT_PUBLIC.unique from the sensitive area based on the object type:
+//
+// If the Object is an asymmetric key:
+// 1. If inSensitive.sensitive.data is not the Empty Buffer, then the TPM shall
+//    return TPM_RC_VALUE.
+// 2. A TPM-generated private key value is created with the size determined by
+//    the parameters of inPublic.publicArea.parameters.
+// 3. If the key is a Storage Key, a TPM-generated TPMT_SENSITIVE.seedValue
+//    value is created; otherwise, TPMT_SENSITIVE.seedValue.size is set to zero.
+//
+// An Object that is not a storage key has no child Objects to encrypt, so it
+// does not need a symmetric key.
+//
+// 4. The public unique value is computed from the private key according to the
+//    methods of the key type.
+// 5. If the key is an ECC key and the scheme required by the curveID is not the
+//    same as scheme in the public area of the template, then the TPM shall
+//    return TPM_RC_SCHEME.
+// 6. If the key is an ECC key and the KDF required by the curveID is not the
+//    same as kdf in the pubic area of the template, then the TPM shall return
+//    TPM_RC_KDF.
+//
+// There is currently no command in which the caller may specify the KDF to be
+// used with an ECC decryption key. Since there is no use for this capability,
+// the Reference Code requires that the kdf in the template be set to
+// TPM_ALG_NULL or TPM_RC_KDF is returned.
+TpmTestVector(
+  name: "[TPM2_Create] asymmetric",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

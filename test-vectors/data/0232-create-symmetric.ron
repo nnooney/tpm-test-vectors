@@ -1,0 +1,29 @@
+// The TPM will create new data for the sensitive area and compute a
+// TPMT_PUBLIC.unique from the sensitive area based on the object type:
+//
+// For a symmetric key:
+// 1. If inSensitive.sensitive.data is the Empty Buffer, a TPM-generated key
+//    value is placed in the new object’s TPMT_SENSITIVE.sensitive.sym. The size
+//    of the key will be determined by inPublic.publicArea.parameters.
+// 2. If inSensitive.sensitive.data is not the Empty Buffer, the TPM will
+//    validate that the size of inSensitive.data is no larger than the key size
+//    indicated in the inPublic template (TPM_RC_SIZE) and copy the
+//    inSensitive.data to TPMT_SENSITIVE.sensitive.sym of the new object.
+// 3. A TPM-generated obfuscation value is placed in
+//    TPMT_SENSITIVE.sensitive.seedValue. The size of the obfuscation value is
+//    the size of the digest produced by the nameAlg in inPublic. This value
+//    prevents the public unique value from leaking information about the
+//    sensitive area.
+// 4. The TPMT_PUBLIC.unique.sym value for the new object is then generated, as
+//    shown in Equation 1 below, by hashing the key and obfuscation values in
+//    the TPMT_SENSITIVE with the nameAlg of the object.
+//
+// unique≔H_nameAlg(sensitive.seedValue.buffer ∥ sensitive.any.buffer)
+TpmTestVector(
+  name: "[TPM2_Create] symmetric",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

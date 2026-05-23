@@ -1,0 +1,16 @@
+// TPM2_Create is used to create an object that can be loaded into a TPM using
+// TPM2_Load(). If the command completes successfully, the TPM will create the
+// new object and return the object’s creation data (creationData), its public
+// area (outPublic), and its encrypted sensitive area (outPrivate). Preservation
+// of the returned data is the responsibility of the caller. The object will
+// need to be loaded (TPM2_Load()) before it may be used. The only difference
+// between the inPublic TPMT_PUBLIC template and the outPublic TPMT_PUBLIC
+// object is in the unique field.
+TpmTestVector(
+  name: "[TPM2_Create] Create object",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

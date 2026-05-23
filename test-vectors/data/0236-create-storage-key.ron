@@ -1,0 +1,23 @@
+// If the object being created is a Storage Key and fixedParent is SET in the
+// attributes of inPublic, then the symmetric algorithms and parameters of
+// inPublic are required to match those of the parent. The algorithms that must
+// match are inPublic.nameAlg, and the values in inPublic.parameters that select
+// the symmetric scheme. If inPublic.nameAlg does not match, the TPM shall
+// return TPM_RC_HASH. If the symmetric scheme of the key does not match, the
+// parent, the TPM shall return TPM_RC_SYMMETRIC. The TPM shall not use
+// different response code to differentiate between mismatches of the components
+// of inPublic.parameters. However, after this verification, when using the
+// scheme to encrypt child objects, the TPM ignores the symmetric mode and uses
+// TPM_ALG_CFB.
+//
+// The symmetric scheme is a TPMT_SYM_DEF_OBJECT. In a symmetric block cipher,
+// it is at inPublic.parameters.symDetail.sym and in an asymmetric object is at
+// inPublic.parameters.asymDetail.symmetric.
+TpmTestVector(
+  name: "[TPM2_Create] storage key",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

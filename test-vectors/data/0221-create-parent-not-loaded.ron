@@ -1,0 +1,10 @@
+// The parentHandle parameter shall reference a loaded decryption key that has
+// both the public and sensitive area loaded.
+TpmTestVector(
+  name: "[TPM2_Create] Create object parent handle not loaded",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

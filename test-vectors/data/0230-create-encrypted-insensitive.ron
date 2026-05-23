@@ -1,0 +1,9 @@
+// The inSensitive parameter may be encrypted using parameter encryption.
+TpmTestVector(
+  name: "[TPM2_Create] encrypted inSensitive",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

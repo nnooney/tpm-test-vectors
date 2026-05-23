@@ -1,0 +1,22 @@
+// When defining the object, the caller provides a template structure for the
+// object in a TPM2B_PUBLIC structure (inPublic), an initial value for the
+// object’s authValue (inSensitive.userAuth), and, if the object is a symmetric
+// object, an optional initial data value (inSensitive.data). The TPM shall
+// validate the consistency of the attributes of inPublic according to the
+// Creation rules in “TPMA_OBJECT” in TPM 2.0 Part 2.
+//
+// svnLimited may only be SET if all of the following are true:
+//
+// • fixedTPM is SET in template
+// • svnLimited is SET in the object’s parent
+//
+// For a Primary Object in a SVN-limited hierarchy, the parent is considered to
+// have svnLimited SET
+TpmTestVector(
+  name: "[TPM2_Create] svnLimited not consistent with template",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

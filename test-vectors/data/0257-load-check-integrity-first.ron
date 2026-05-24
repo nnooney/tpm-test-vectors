@@ -1,0 +1,14 @@
+// The integrity value shall be checked before the private area is decrypted and
+// unmarshalled.
+//
+// Checking the integrity before the data is decrypted and unmarshalled prevents
+// attacks on the sensitive area by fuzzing the data and looking at the
+// differences in the response codes.
+TpmTestVector(
+  name: "[TPM2_Load] checks integrity before decrypting private data",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

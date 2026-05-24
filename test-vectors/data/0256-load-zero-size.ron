@@ -1,0 +1,9 @@
+// If inPrivate.size is zero, the load will fail
+TpmTestVector(
+  name: "[TPM2_Load] zero size object",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,0 +1,11 @@
+// For all objects, the size of the key in the sensitive area shall be
+// consistent with the key size indicated in the public area or the TPM shall
+// return TPM_RC_KEY_SIZE.
+TpmTestVector(
+  name: "[TPM2_Load] inconsistent key size",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

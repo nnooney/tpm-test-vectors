@@ -1,0 +1,9 @@
+// TPM handle of parent key; shall not be a reserved handle
+TpmTestVector(
+  name: "[TPM2_Load] reserved handle for parent",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

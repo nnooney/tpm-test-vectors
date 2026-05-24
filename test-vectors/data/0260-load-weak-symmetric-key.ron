@@ -1,0 +1,10 @@
+// If a weak symmetric key is in the sensitive portion, the TPM shall return
+// TPM_RC_KEY.
+TpmTestVector(
+  name: "[TPM2_Load] weak symmetric key",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,0 +1,17 @@
+// TPM2_Load is used to load objects into the TPM. TPM2_Load is used when both a
+// TPM2B_PUBLIC and TPM2B_PRIVATE are to be loaded. If only a TPM2B_PUBLIC is to
+// be loaded, the TPM2_LoadExternal() command is used. The object’s TPMA_OBJECT
+// attributes will be checked according to the rules defined in “TPMA_OBJECT” in
+// TPM 2.0 Part 2 of this specification.
+//
+// encryptedDuplication shall be CLEAR if fixedTPM is SET. If fixedTPM is CLEAR,
+// then this attribute shall have the same value as its parent, unless fixedTPM
+// is SET the parent, in which case, it may be SET or CLEAR.
+TpmTestVector(
+  name: "[TPM2_Load] encryptedDuplication not consistent with template",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

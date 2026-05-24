@@ -1,0 +1,15 @@
+// TPM2_Load is used to load objects into the TPM. TPM2_Load is used when both a
+// TPM2B_PUBLIC and TPM2B_PRIVATE are to be loaded. If only a TPM2B_PUBLIC is to
+// be loaded, the TPM2_LoadExternal() command is used. The object’s TPMA_OBJECT
+// attributes will be checked according to the rules defined in “TPMA_OBJECT” in
+// TPM 2.0 Part 2 of this specification.
+//
+// signencrypt shall not be SET if decrypt and restricted are both SET
+TpmTestVector(
+  name: "[TPM2_Load] signencrypt not consistent with template",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

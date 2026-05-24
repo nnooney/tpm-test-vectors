@@ -1,0 +1,12 @@
+// Before use, a loaded object shall be checked to validate that the public and
+// sensitive portions are properly linked, cryptographically. Use of an object
+// includes use in any policy command. If the parts of the object are not
+// properly linked, the TPM shall return TPM_RC_BINDING.
+TpmTestVector(
+  name: "[TPM2_Load] no cryptographic link between public and sensitive areas",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

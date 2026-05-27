@@ -1,0 +1,11 @@
+// Objects loaded using this command will have a Name. The Name is the nameAlg
+// of the object concatenated with the digest of the public area using the
+// nameAlg. The Qualified Name for the object will be the same as its Name.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] name and qualified name match",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

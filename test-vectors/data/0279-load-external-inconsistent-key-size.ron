@@ -1,0 +1,11 @@
+// The TPM will validate that the size of the key in the sensitive area is
+// consistent with the size indicated in the public area. If it is not, the TPM
+// shall return TPM_RC_KEY_SIZE.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] inconsistent key size",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,0 +1,10 @@
+// External objects are Temporary Objects. The saved external object contexts
+// shall be invalidated at the next TPM Reset.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] cleared on reset",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

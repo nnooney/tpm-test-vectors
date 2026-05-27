@@ -1,0 +1,18 @@
+// The TPM will validate that the authPolicy is either the size of the digest
+// produced by nameAlg or the Empty Buffer.
+//
+// If nameAlg is TPM_ALG_NULL, then the Name is the Empty Buffer. When the
+// authorization value for an object with no Name is computed, no Name value is
+// included in the HMAC. To ensure that these unnamed entities are not
+// substituted, it is recommended that they have an authValue that is
+// statistically unique.
+//
+// The digest size for TPM_ALG_NULL is zero.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] authPolicy checks",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

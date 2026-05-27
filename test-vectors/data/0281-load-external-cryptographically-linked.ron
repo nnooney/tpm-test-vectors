@@ -1,0 +1,14 @@
+// If nameAlg is not TPM_ALG_NULL, then the same consistency checks between
+// inPublic and inPrivate are made as for TPM2_Load().
+//
+// Consistency checks are necessary because an object with a Name needs to have
+// the public and sensitive portions cryptographically bound so that an attacker
+// cannot mix pubic and sensitive areas.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] no cryptographic link between public and sensitive areas",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,0 +1,20 @@
+// The object’s TPMA_OBJECT attributes will be checked according to the rules
+// defined in “TPMA_OBJECT” in TPM 2.0 Part 2. In particular, fixedTPM,
+// fixedParent, and restricted shall be CLEAR if inPrivate is not the Empty
+// Buffer.
+//
+// The duplication status of a public key needs to be able to be the same as the
+// full key which may be resident on a different TPM. If both the public and
+// private parts of the key are loaded, then it is not possible for the key to
+// be either fixedTPM or fixedParent since its private area would not be
+// available in the clear to load.
+//
+// signencrypt shall not be SET if decrypt and restricted are both SET
+TpmTestVector(
+  name: "[TPM2_LoadExternal] signencrypt not consistent with parent",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

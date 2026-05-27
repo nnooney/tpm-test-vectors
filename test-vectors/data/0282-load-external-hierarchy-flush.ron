@@ -1,0 +1,12 @@
+// The hierarchy parameter associates the external object with a hierarchy.
+// External objects are flushed when their associated hierarchy is disabled. If
+// hierarchy is TPM_RH_NULL, the object is part of no hierarchy, and there is no
+// implicit flush.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] objects flushed when hierarchy is disabled",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

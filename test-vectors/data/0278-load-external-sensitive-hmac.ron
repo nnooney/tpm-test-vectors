@@ -1,0 +1,12 @@
+// If the nameAlg is TPM_ALG_NULL, the TPM cannot, and thus shall not verify the
+// integrity HMAC on the sensitive area. The TPM will still perform
+// cryptographic validity checks (e.g., the ECC public point is on the curve)
+// and public/private keypair consistency checks.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] sensitive area hmac",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

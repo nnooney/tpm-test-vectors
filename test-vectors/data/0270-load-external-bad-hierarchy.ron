@@ -1,0 +1,24 @@
+// TPM2_LoadExternal is used to load an object that is not a Protected Object
+// into the TPM. The command allows loading of a public area or both a public
+// and sensitive area.
+//
+// Typical use for loading a public area is to allow the TPM to validate an
+// asymmetric signature. Typical use for loading both a public and sensitive
+// area is to allow the TPM to be used as a crypto accelerator.
+//
+// Load of a public external object area allows the object to be associated with
+// a hierarchy so that the correct algorithms may be used when creating tickets.
+// The hierarchy parameter provides this association. If the public and
+// sensitive portions of the object are loaded, hierarchy is required to be
+// TPM_RH_NULL.
+//
+// If both the public and private portions of an object are loaded, the object
+// is not allowed to appear to be part of a hierarchy
+TpmTestVector(
+  name: "[TPM2_LoadExternal] bad hierarchy",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

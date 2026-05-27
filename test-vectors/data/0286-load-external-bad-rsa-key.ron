@@ -1,0 +1,12 @@
+// For an RSA key, the private exponent is computed using the two prime factors
+// of the public modulus. One of the primes is P, and the second prime (Q) is
+// found by dividing the public modulus by P. A TPM may return an error
+// (TPM_RC_BINDING) if the bit size of P and Q are not the same.
+TpmTestVector(
+  name: "[TPM2_LoadExternal] bad RSA key",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,6 +1,6 @@
 // For an ECC object, the TPM will verify that the public key is on the curve of
 // the key before the public area is used.
-TpmTestVector
+TpmTestVector(
   name: "[TPM2_LoadExternal] ECC key not on curve",
   spec_versions: [
     184,

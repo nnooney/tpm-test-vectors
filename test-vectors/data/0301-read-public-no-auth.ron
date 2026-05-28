@@ -1,0 +1,13 @@
+// Use of the objectHandle does not require authorization.
+//
+// Since the caller is not likely to know the public area of the object
+// associated with objectHandle, it would not be possible to include the Name
+// associated with objectHandle in the cpHash computation.
+TpmTestVector(
+  name: "[TPM2_ReadPublic] no authorization required",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

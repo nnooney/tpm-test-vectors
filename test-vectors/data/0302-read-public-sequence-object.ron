@@ -1,0 +1,10 @@
+// If objectHandle references a sequence object, the TPM shall return
+// TPM_RC_SEQUENCE.
+TpmTestVector(
+  name: "[TPM2_ReadPublic] sequence object",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

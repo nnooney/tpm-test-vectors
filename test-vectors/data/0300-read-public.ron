@@ -1,0 +1,12 @@
+// TPM2_ReadPublic is for reading the public area of NV indices of type
+// TPM_HT_NV_INDEX. For more general NV spaces, see TPM2_NV_ReadPublic2.
+//
+// This command allows access to the public area of a loaded object.
+TpmTestVector(
+  name: "[TPM2_ReadPublic] read NV index",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

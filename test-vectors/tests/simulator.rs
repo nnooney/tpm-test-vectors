@@ -1,6 +1,6 @@
 use rstest::rstest;
 use tempfile::tempdir;
-use tpm2_rs_client::connection::{Connection, TcpSimulator};
+use tpm2_client::connection::{Connection, TcpSimulator};
 use tpm2_test_vectors::{Harness, HarnessError, InMemoryStore, Store};
 
 /// Environment variable used to connect to the TPM simulator over TCP.

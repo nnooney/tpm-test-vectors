@@ -13,7 +13,7 @@ rstest = "0.26.1"
 serde = { version = "1.0.228", features = ["derive"] }
 serde_with = { version = "3.16.1", features = ["hex"] }
 tempfile = "3.25.0"
-tpm2-rs-client = { git = "https://github.com/tpm-rs/tpm-rs.git" }
+tpm2-client = { git = "https://github.com/tpm-rs/tpm-rs.git" }
 # tpm2-rs-client = { path = "../tpm-rs/client" }
 
 # Common workspace crates

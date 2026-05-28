@@ -870,22 +870,14 @@ dependencies = [
 ]
 
 [[package]]
-name = "tpm2-rs-base"
-version = "0.0.1"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
-dependencies = [
- "bitflags",
- "open-enum",
- "safe-discriminant",
- "tpm2-rs-errors",
- "tpm2-rs-marshalable",
- "tpm2-rs-unionify",
-]
+name = "tpm2"
+version = "0.1.0"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#b48a46fa4a09b252ed59aa8d03b2a35d3e5cbd0c"
 
 [[package]]
-name = "tpm2-rs-client"
+name = "tpm2-client"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#b48a46fa4a09b252ed59aa8d03b2a35d3e5cbd0c"
 dependencies = [
  "tpm2-rs-base",
  "tpm2-rs-marshalable",
@@ -893,42 +885,31 @@ dependencies = [
 ]
 
 [[package]]
-name = "tpm2-rs-errors"
+name = "tpm2-rs-base"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#b48a46fa4a09b252ed59aa8d03b2a35d3e5cbd0c"
+dependencies = [
+ "bitflags",
+ "open-enum",
+ "safe-discriminant",
+ "tpm2",
+ "tpm2-rs-marshalable",
+]
 
 [[package]]
 name = "tpm2-rs-marshalable"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#b48a46fa4a09b252ed59aa8d03b2a35d3e5cbd0c"
 dependencies = [
  "safe-discriminant",
- "tpm2-rs-errors",
+ "tpm2",
  "tpm2-rs-marshalable-derive",
 ]
 
 [[package]]
 name = "tpm2-rs-marshalable-derive"
 version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 2.0.116",
-]
-
-[[package]]
-name = "tpm2-rs-unionify"
-version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
-dependencies = [
- "tpm2-rs-unionify-derive",
-]
-
-[[package]]
-name = "tpm2-rs-unionify-derive"
-version = "0.1.0"
-source = "git+https://github.com/tpm-rs/tpm-rs.git#63496877474feb4dc81daaf0d5e58be645c813dc"
+source = "git+https://github.com/tpm-rs/tpm-rs.git#b48a46fa4a09b252ed59aa8d03b2a35d3e5cbd0c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -948,7 +929,7 @@ dependencies = [
  "serde",
  "serde_with",
  "tempfile",
- "tpm2-rs-client",
+ "tpm2-client",
 ]
 
 [[package]]

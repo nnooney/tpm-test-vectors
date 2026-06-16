@@ -1,0 +1,12 @@
+// TPM2_Unseal returns the data in a loaded Sealed Data Object.
+//
+// If the type of itemHandle is not TPM_ALG_KEYEDHASH, then the TPM shall return
+// TPM_RC_TYPE.
+TpmTestVector(
+  name: "[TPM2_Unseal] bad object type",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

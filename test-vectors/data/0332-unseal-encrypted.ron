@@ -1,0 +1,9 @@
+// The returned value may be encrypted using authorization session encryption.
+TpmTestVector(
+  name: "[TPM2_Unseal] encrypted session",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

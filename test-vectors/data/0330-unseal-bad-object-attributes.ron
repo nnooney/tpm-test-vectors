@@ -1,0 +1,12 @@
+// TPM2_Unseal returns the data in a loaded Sealed Data Object.
+//
+// If either restricted, decrypt, or sign is SET in the attributes of
+// itemHandle, then the TPM shall return TPM_RC_ATTRIBUTES.
+TpmTestVector(
+  name: "[TPM2_Unseal] bad object attributes",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

@@ -1,0 +1,9 @@
+// itemHandle: handle of a loaded data object
+TpmTestVector(
+  name: "[TPM2_Unseal] itemHandle not loaded",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)

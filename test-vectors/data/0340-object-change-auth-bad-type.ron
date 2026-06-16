@@ -1,0 +1,20 @@
+// TPM2_ObjectChangeAuth is used to change the authorization secret for a
+// TPM-resident object.
+//
+// If successful, a new private area for the TPM-resident object associated with
+// objectHandle is returned, which includes the new authorization value.
+//
+// This command does not change the authorization of the TPM-resident object on
+// which it operates. Therefore, the old authValue (of the TPM-resident object)
+// is used when generating the response HMAC key if required.
+//
+// This command may not be used to change the authorization value for an NV
+// Index or a Primary Object.
+TpmTestVector(
+  name: "[TPM2_ObjectChangeAuth] bad object type",
+  spec_versions: [
+    184,
+  ],
+  test_sequence: [
+  ]
+)
